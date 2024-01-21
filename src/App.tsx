@@ -4,6 +4,7 @@ import SplitPane from "./SplitPane/SplitPane";
 
 import './App.css'
 import Properties from "./Properties/Properties";
+import StatusBar from "./StatusBar/StatusBar";
 
 const App = () => {
 
@@ -20,13 +21,7 @@ const App = () => {
 
             </SplitPane>
 
-            <div className="footer" style={{
-                backgroundColor: 'red',
-                width: "100%",
-                height: "50px"
-            }}>
-                <h1>Test</h1>
-            </div>
+            <StatusBar />
             
         </section>
 
