@@ -22,17 +22,18 @@
 
 }
 
-#cue-list .cue.selected {
-
-    background-color: var(--selected-color);
-
-}
-
 #cue-list .cue:nth-child(even) {
 
     background-color: var(--even-cue-color);
 
 } 
+
+
+#cue-list .cue.selected {
+
+    background-color: var(--selected-color) !important;
+
+}
 
 #cue-list .cue > .hamburger-icon {
 
