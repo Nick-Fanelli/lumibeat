@@ -1,0 +1,38 @@
+#audio-visualizer {
+
+    position: absolute;
+
+    width: 95%;
+    height: 100%;
+
+    display: flex;
+    flex-direction: column;
+
+}
+
+#audio-visualizer > button {
+    
+    margin: 0 0 0 0;
+
+}
+
+#waveform-container {
+
+    margin: 1em 0 0 0;
+
+    height: calc(165px + 4em);
+    border: solid 2em #03111c;
+
+    background-color: #03111c;
+    border-radius: 15px;
+
+}
+
+#waveform ::part(cursor) {
+
+    height: 100%;
+    top: 0;
+    border-radius: 4px;
+    border: 1px solid var(--text-color);
+
+}

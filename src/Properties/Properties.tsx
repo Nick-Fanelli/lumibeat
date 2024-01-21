@@ -1,3 +1,4 @@
+import AudioVisualizer from '../AudioVisualizer/AudioVisualizer';
 import './Properties.css'
 
 const Properties = () => {
@@ -5,9 +6,7 @@ const Properties = () => {
     return (
         <section id="properties">
 
-            <div className="visualizer">
-                <h1>Visualizer</h1>
-            </div>
+            <AudioVisualizer />            
 
         </section>
     )
