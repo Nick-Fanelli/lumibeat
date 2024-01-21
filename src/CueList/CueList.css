@@ -5,6 +5,12 @@
 
 }
 
+#cue-list {
+
+    height: 100%;
+
+}
+
 #cue-list .cue {
 
     width: 100%;
@@ -19,12 +25,6 @@
 #cue-list .cue.selected {
 
     background-color: var(--selected-color);
-
-}
-
-#cue-list .cue h1 {
-    
-    user-select: none;
 
 }
 

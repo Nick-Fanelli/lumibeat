@@ -1,0 +1,93 @@
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
+import './SplitPane.css'
+
+type Props = {
+
+    children: React.ReactElement[]
+
+}
+
+const SplitPane = (props: Props) => {
+
+    const splitPaneRef = useRef<HTMLDivElement>(null);
+
+    const [isDragging, setIsDragging] = useState<boolean>(false);
+    const [divPercentage, setDivPercentage] = useState<number>(50);
+
+    const handleMouseUp = useCallback(() => {
+
+        setIsDragging(false);
+
+    }, [setIsDragging]);
+
+    const handleDividerClick = useCallback(() => {
+
+        setIsDragging(true);
+
+        document.addEventListener('mouseup', handleMouseUp);
+
+        return () => {
+            document.removeEventListener('mouseup', handleMouseUp);
+        }
+
+    }, [setIsDragging]);
+
+    useEffect(() => {
+
+        const handleDrag = (e: MouseEvent) => {
+
+            if(isDragging && splitPaneRef.current) {
+
+                const totalHeight = (window.innerHeight * 2) - (splitPaneRef.current.getBoundingClientRect().bottom - splitPaneRef.current.getBoundingClientRect().top);
+                const mouseY = e.clientY - splitPaneRef.current.getBoundingClientRect().top;
+
+                const newPercentage = (mouseY / totalHeight) * 100;
+
+                const clampedPercentage = Math.min(100, Math.max(0, newPercentage));
+
+                setDivPercentage(clampedPercentage);
+            }
+
+        }
+
+        if(isDragging) {
+            document.addEventListener('mousemove', handleDrag);
+        } else {
+            document.removeEventListener('mousemove', handleDrag);
+        }
+
+        return () => {
+            document.removeEventListener('mousemove', handleDrag);
+        }
+
+    }, [isDragging, setDivPercentage]);
+
+    useLayoutEffect(() => {
+
+        document.removeEventListener('mouseup', handleMouseUp);
+
+    }, []);
+
+    return (
+
+        <div className="split-pane" ref={splitPaneRef}>
+
+            <div className="pane" style={{ height: `${divPercentage}%` }}>
+                {props.children[0]}
+            </div>
+
+            <div className="divider" onMouseDown={handleDividerClick}>
+                <div />
+            </div>
+
+            <div className="pane" style={{ height: `${100 - divPercentage}%` }}>
+                {props.children[1]}
+            </div>
+
+        </div>
+
+    )
+    
+}
+
+export default SplitPane;
