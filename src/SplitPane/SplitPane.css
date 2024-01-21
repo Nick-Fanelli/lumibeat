@@ -30,3 +30,9 @@
     pointer-events: none;
 
 }
+
+.split-pane > .pane {
+
+    overflow: hidden;
+
+}
