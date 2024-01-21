@@ -38,7 +38,7 @@ const SplitPane = (props: Props) => {
 
             if(isDragging && splitPaneRef.current) {
 
-                const totalHeight = (window.innerHeight * 2) - (splitPaneRef.current.getBoundingClientRect().bottom - splitPaneRef.current.getBoundingClientRect().top);
+                const totalHeight = splitPaneRef.current.getBoundingClientRect().height;
                 const mouseY = e.clientY - splitPaneRef.current.getBoundingClientRect().top;
 
                 const newPercentage = (mouseY / totalHeight) * 100;
