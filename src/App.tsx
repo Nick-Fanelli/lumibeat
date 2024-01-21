@@ -3,6 +3,7 @@ import Header from "./Header/Header";
 import SplitPane from "./SplitPane/SplitPane";
 
 import './App.css'
+import Properties from "./Properties/Properties";
 
 const App = () => {
 
@@ -15,7 +16,7 @@ const App = () => {
             <SplitPane>
                 
                 <CueList />
-                <div style={{width: "100%", height: "100%"}}></div>
+                <Properties />
 
             </SplitPane>
 
