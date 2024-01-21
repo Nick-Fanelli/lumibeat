@@ -1,0 +1,32 @@
+.split-pane {
+
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+
+}
+
+.split-pane > .divider {
+
+    /* FOR DEBUG TO SEE TARGET AREA */
+    /* background-color: blue; */
+    
+    height: 10px; /* Target area size */
+    width: 100%;
+    cursor: row-resize;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+}
+
+.split-pane > .divider > div {
+
+    background-color: var(--secondary-separator-color);
+    height: 3px;
+    width: 100%;
+
+    pointer-events: none;
+
+}

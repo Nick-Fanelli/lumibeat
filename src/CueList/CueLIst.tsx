@@ -1,5 +1,5 @@
 import { LegacyRef, useCallback, useState } from 'react';
-import { DragDropContext, Droppable, Draggable, DropResult, DraggableProvidedDraggableProps, DraggableProvidedDragHandleProps, } from 'react-beautiful-dnd';
+import { DragDropContext, Draggable, DropResult, DraggableProvidedDraggableProps, DraggableProvidedDragHandleProps, } from 'react-beautiful-dnd';
 import './CueList.css'
 import { StrictModeDroppable } from './StrictModeDroppable';
 
