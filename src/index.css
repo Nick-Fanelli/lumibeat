@@ -17,11 +17,7 @@
 
 }
 
-/* #root-app.light {
-
-} */
-
-#root-app.dark {
+#root-app {
 
     --selected-color: #1052be;
 
