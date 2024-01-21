@@ -7,6 +7,8 @@ type Props = {
 
 }
 
+const MIN_MAX_PERCENTAGE = 15; // percent
+
 const SplitPane = (props: Props) => {
 
     const splitPaneRef = useRef<HTMLDivElement>(null);
@@ -43,7 +45,7 @@ const SplitPane = (props: Props) => {
 
                 const newPercentage = (mouseY / totalHeight) * 100;
 
-                const clampedPercentage = Math.min(100, Math.max(0, newPercentage));
+                const clampedPercentage = Math.min(100 - MIN_MAX_PERCENTAGE, Math.max(MIN_MAX_PERCENTAGE, newPercentage));
 
                 setDivPercentage(clampedPercentage);
             }
