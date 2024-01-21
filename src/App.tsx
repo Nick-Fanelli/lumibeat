@@ -10,7 +10,7 @@ const App = () => {
 
     return (
 
-        <section id="root-app" className="dark">
+        <section id="root-app">
 
             <Header />
 
