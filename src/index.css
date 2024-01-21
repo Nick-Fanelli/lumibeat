@@ -1,0 +1,55 @@
+* {
+
+    margin: 0;
+    padding: 0; 
+    box-sizing: border-box;
+
+    font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+
+    --nav-bar-height: 3.5em;
+    --side-bar-width: 18em;
+
+}
+
+/* #root-app.light {
+
+} */
+
+#root-app.dark {
+
+    --selected-color: #1052be;
+
+    --background-color: #091a2a;
+    --secondary-background-color: #041524;
+
+    --secondary-separator-color: #192a3b;
+    --secondary-hover-color: #12263a;
+
+    --button-color: #112438;
+    --button-hover-color: #142940;
+    --button-active-color: #1a3450;
+
+    --text-color: #ced9e5;
+    --unfocused-text-color: #373d45;
+
+    --skeleton-base-color: hsl(208, 60%, 16%);
+    --skeleton-highlight-color: hsl(208, 60%, 24%);
+
+
+}
+
+:root, #root-app {
+
+    position: absolute;
+    min-width: 100vw;
+    min-height: 100vh;
+
+    top: 0;
+    left: 0;
+
+    overflow: hidden;
+
+    background-color: var(--background-color);
+    color: var(--text-color);
+
+}

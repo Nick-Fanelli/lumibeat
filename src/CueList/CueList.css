@@ -1,0 +1,46 @@
+:root {
+
+    --odd-cue-color: #113353;
+    --even-cue-color: #0e2943;
+
+}
+
+#cue-list .cue {
+
+    width: 100%;
+    background-color: var(--odd-cue-color);
+    height: 2em;
+    display: flex; 
+    justify-content: space-between;
+    align-items: center;
+
+}
+
+#cue-list .cue.selected {
+
+    background-color: var(--selected-color);
+
+}
+
+#cue-list .cue h1 {
+    
+    user-select: none;
+
+}
+
+#cue-list .cue:nth-child(even) {
+
+    background-color: var(--even-cue-color);
+
+} 
+
+#cue-list .cue > .hamburger-icon {
+
+    height: 100%;
+    width: 40px;
+    font-size: 1.2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
