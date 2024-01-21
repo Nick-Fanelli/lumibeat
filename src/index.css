@@ -17,8 +17,7 @@
 
 }
 
-#root-app {
-
+:root {
     --selected-color: #1052be;
 
     --background-color: #091a2a;
@@ -36,8 +35,6 @@
 
     --skeleton-base-color: hsl(208, 60%, 16%);
     --skeleton-highlight-color: hsl(208, 60%, 24%);
-
-
 }
 
 :root, #root-app {
@@ -55,6 +52,7 @@
     right: 0;
 
     overflow: hidden;
+    /* overflow: scroll !important; */
 
     background-color: var(--background-color);
     color: var(--text-color);

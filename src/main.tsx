@@ -6,5 +6,6 @@ import './index.css'
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
     <App />
+    <section id="bottom-resize-buffer" />
   </React.StrictMode>,
 );
