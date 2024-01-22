@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useRef } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import './AudioVisualizer.css';
 
 import { useWavesurfer } from '@wavesurfer/react'
@@ -7,38 +7,52 @@ import { convertFileSrc } from '@tauri-apps/api/tauri';
 import TimelinePlugin from 'wavesurfer.js/dist/plugins/timeline.js';
 import ZoomPlugin from 'wavesurfer.js/dist/plugins/zoom.js';
 import RegionsPlugin from 'wavesurfer.js/dist/plugins/regions.js';
+import HoverPlugin from 'wavesurfer.js/dist/plugins/hover.js';
 
-const formatTime = (seconds: number) => [seconds / 60, seconds % 60].map((v) => `0${Math.floor(v)}`.slice(-2)).join(':');
+const formatTime = (seconds: number) => [seconds / 60, seconds % 60, (seconds % 1) * 1000].map((v) => `0${Math.floor(v)}`.slice(-2)).join(':');
 
 const audioFilepath = convertFileSrc("/Users/nickfanelli/Downloads/spotifydown.com - American Ride.mp3");
 
 const AudioVisualizer = () => {
 
+    const [duration, setDuration] = useState<string>("");
+
+    const regionsPluginRef = useRef<RegionsPlugin>(RegionsPlugin.create());
+
     const visualizerRef = useRef<HTMLDivElement>(null);
 
-    const { wavesurfer, currentTime } = useWavesurfer({
-        container: visualizerRef,
+    const { wavesurfer, currentTime  } = useWavesurfer({
         url: audioFilepath,
+        container: visualizerRef,
         waveColor: "#326ca9",
         progressColor: "#2d4151",
         minPxPerSec: 0,
         fillParent: true,
         autoScroll: true,
         dragToSeek: true,
-        hideScrollbar: true,
+        autoCenter: true,
         plugins: useMemo(() => [
             TimelinePlugin.create(), 
             ZoomPlugin.create({ 
                 scale: 0.5, 
                 maxZoom: 200,
             }),
-            RegionsPlugin.create()
+            HoverPlugin.create(),
+            regionsPluginRef.current,
         ], [])
     });
 
-    const onPlayPause = useCallback(() => {
-        wavesurfer && wavesurfer.playPause();
-    }, [wavesurfer]);
+    const newTrigger = (timecode: number) => {
+        
+        regionsPluginRef.current.addRegion({
+            start: timecode,
+        })
+
+    }
+
+    wavesurfer?.on('decode', (duration: number) => {
+        setDuration(formatTime(duration));
+    });
 
     return (
         <section id="audio-visualizer">
@@ -47,9 +61,12 @@ const AudioVisualizer = () => {
             </div>
 
             <div id="stats">
-                <h1>{formatTime(currentTime)}</h1>
+                <div className="time">
+                    <h1>{formatTime(currentTime)}</h1>
+                    <h1>{duration}</h1>
+                </div>
+                <button id="add-trigger" onClick={() => newTrigger(currentTime)}>New Trigger</button>
             </div>
-            <button onClick={onPlayPause}>Play & Pause</button>
         </section>
     )
 
