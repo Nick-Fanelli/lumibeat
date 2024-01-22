@@ -38,7 +38,6 @@ const Cue = (props: CueProps) => {
         >
             <h1>{props.cue.name}</h1>
             <div className="hamburger-icon" {...props.dragHandleProps}>☰</div>
-
         </div>
     )
 

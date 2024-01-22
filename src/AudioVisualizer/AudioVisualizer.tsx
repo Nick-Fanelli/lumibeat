@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import './AudioVisualizer.css';
 
 import { useWavesurfer } from '@wavesurfer/react'
@@ -31,6 +31,7 @@ const AudioVisualizer = () => {
         autoScroll: true,
         dragToSeek: true,
         autoCenter: true,
+        height: 100,
         plugins: useMemo(() => [
             TimelinePlugin.create(), 
             ZoomPlugin.create({ 
@@ -53,6 +54,36 @@ const AudioVisualizer = () => {
     wavesurfer?.on('decode', (duration: number) => {
         setDuration(formatTime(duration));
     });
+
+    useEffect(() => {
+
+        const unsubscribeHandles: (() => void)[] = [];
+
+        unsubscribeHandles.push(
+            regionsPluginRef.current.on('region-clicked', (region: any, e: MouseEvent) => {
+                console.log(region);
+                console.log('Region Clicked')
+            })
+        );
+
+        unsubscribeHandles.push(
+            regionsPluginRef.current.on('region-created', () => {
+                console.log('Region Created')
+            })
+        );
+
+        unsubscribeHandles.push(
+            regionsPluginRef.current.on('region-removed', () => {
+                console.log('Region Removed')
+            })
+        );
+
+        return () => {
+            unsubscribeHandles.forEach((handle) => { handle(); });
+            unsubscribeHandles.length = 0;
+        }
+
+    }, [regionsPluginRef.current]);
 
     return (
         <section id="audio-visualizer">

@@ -2,7 +2,7 @@
 
     position: absolute;
 
-    width: 95%;
+    width: 98%;
     height: 100%;
 
     display: flex;
@@ -53,7 +53,6 @@
 
     margin: 1em 0 0 0;
 
-    height: calc(165px + 4em);
     border: solid 2em #03111c;
 
     background-color: #03111c;
