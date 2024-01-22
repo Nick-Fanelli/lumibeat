@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useMemo, useRef } from 'react';
 import './AudioVisualizer.css';
 
 import { useWavesurfer } from '@wavesurfer/react'
@@ -7,6 +7,8 @@ import { convertFileSrc } from '@tauri-apps/api/tauri';
 import TimelinePlugin from 'wavesurfer.js/dist/plugins/timeline.js';
 import ZoomPlugin from 'wavesurfer.js/dist/plugins/zoom.js';
 import RegionsPlugin from 'wavesurfer.js/dist/plugins/regions.js';
+
+const formatTime = (seconds: number) => [seconds / 60, seconds % 60].map((v) => `0${Math.floor(v)}`.slice(-2)).join(':');
 
 const audioFilepath = convertFileSrc("/Users/nickfanelli/Downloads/spotifydown.com - American Ride.mp3");
 
@@ -45,7 +47,7 @@ const AudioVisualizer = () => {
             </div>
 
             <div id="stats">
-                <h1>{currentTime}</h1>
+                <h1>{formatTime(currentTime)}</h1>
             </div>
             <button onClick={onPlayPause}>Play & Pause</button>
         </section>
