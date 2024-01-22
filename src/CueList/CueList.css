@@ -15,10 +15,17 @@
 
     width: 100%;
     background-color: var(--odd-cue-color);
-    height: 2em;
+    height: 26px;
     display: flex; 
     justify-content: space-between;
     align-items: center;
+
+}
+
+#cue-list .cue > h1 {
+
+    font-size: 1.1rem;
+    font-weight: 500;
 
 }
 
