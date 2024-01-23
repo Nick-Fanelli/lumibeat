@@ -77,7 +77,7 @@
 
 #waveform ::part(marker) {
 
-    background-color: #c78f00 !important;
+    background-color: #c78f00;
     text-indent: 4px;
     text-decoration: underline;
 
