@@ -1,84 +1,14 @@
 #audio-visualizer {
 
-    position: absolute;
-
-    width: 98%;
+    background-color: red;
+    width: 100%;
     height: 100%;
 
-    display: flex;
-    flex-direction: column;
-
 }
 
-#audio-visualizer #stats {
+#audio-visualizer > canvas {
 
-    margin: 0.75em 0.5em;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-
-}
-
-#audio-visualizer #stats > h1 {
-
-    font-size: 1.25rem;
-
-}
-
-#audio-visualizer #stats > button#add-trigger {
-
-    background-color: transparent;
-    border: none;
-    color: var(--text-color);
-    font-size: 1.15rem;
-    margin: 0;
-    padding: 0;
-    height: 40px;
-    border-radius: 10px;
-    padding: 0 0.75em;
-    background-color: var(--button-color);
-
-}
-
-#audio-visualizer #stats > button#add-trigger:hover { background-color: var(--button-hover-color); }
-#audio-visualizer #stats > button#add-trigger:active { background-color: var(--button-active-color); }
-
-#audio-visualizer > button {
-    
-    margin: 0 0 0 0;
-
-}
-
-#waveform-container {
-
-    margin: 1em 0 0 0;
-
-    border: solid 2em #03111c;
-
-    background-color: #03111c;
-    border-radius: 15px;
-
-}
-
-#waveform {
-
-    overflow: visible;
-
-}
-
-#waveform ::part(cursor) {
-
-    height: 100%;
-    border-radius: 4px;
-    width: 3px;
-    background-color: var(--text-color);
-
-}
-
-#waveform ::part(marker) {
-
-    background-color: #c78f00;
-    text-indent: 4px;
-    text-decoration: underline;
+    height: 60%;
+    width: 60%;
 
 }
