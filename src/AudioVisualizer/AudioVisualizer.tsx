@@ -1,124 +1,109 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import './AudioVisualizer.css';
-
-import { useWavesurfer } from '@wavesurfer/react'
 import { convertFileSrc } from '@tauri-apps/api/tauri';
-
-import TimelinePlugin from 'wavesurfer.js/dist/plugins/timeline.js';
-import ZoomPlugin from 'wavesurfer.js/dist/plugins/zoom.js';
-import RegionsPlugin, { Region } from 'wavesurfer.js/dist/plugins/regions.js';
-import HoverPlugin from 'wavesurfer.js/dist/plugins/hover.js';
 
 const formatTime = (seconds: number) => [seconds / 60, seconds % 60, (seconds % 1) * 1000].map((v) => `0${Math.floor(v)}`.slice(-2)).join(':');
 
 const audioFilepath = convertFileSrc("/Users/nickfanelli/Downloads/spotifydown.com - American Ride.mp3");
 
-const AudioVisualizer = () => {
+const downsampleChannelData = (channelData: Float32Array, skipFactor: number): Float32Array => {
 
-    const [duration, setDuration] = useState<string>("");
-    const [activeRegion, setActiveRegion] = useState<Region | undefined>(undefined);
+    const downsampledData = new Float32Array(Math.floor(channelData.length / skipFactor));
 
-    const regionsPluginRef = useRef<RegionsPlugin>(RegionsPlugin.create());
-
-    const visualizerRef = useRef<HTMLDivElement>(null);
-
-    const { wavesurfer, currentTime  } = useWavesurfer({
-        url: audioFilepath,
-        container: visualizerRef,
-        waveColor: "#326ca9",
-        progressColor: "#2d4151",
-        minPxPerSec: 0,
-        fillParent: true,
-        autoScroll: true,
-        dragToSeek: true,
-        autoCenter: true,
-        height: 100,
-        plugins: useMemo(() => [
-            TimelinePlugin.create(), 
-            ZoomPlugin.create({ 
-                scale: 0.5, 
-                maxZoom: 200,
-            }),
-            HoverPlugin.create(),
-            regionsPluginRef.current,
-        ], [])
-    });
-
-    const newTrigger = (timecode: number) => {
-        
-        regionsPluginRef.current.addRegion({
-            start: timecode,
-        })
-
+    for(let i = 0; i < downsampledData.length; i++) {
+        downsampledData[i] = channelData[i * skipFactor];
     }
 
-    wavesurfer?.on('decode', (duration: number) => {
-        setDuration(formatTime(duration));
-    });
+    return downsampledData;
+
+}
+
+const AudioVisualizer = () => {
+
+    const canvasRef = useRef<HTMLCanvasElement>(null);
+
+    const [channelData, setChannelData] = useState<Float32Array | undefined>(undefined);
+
+    const drawWaveform = useCallback(() => {
+        if(canvasRef.current == null)
+            return;
+
+        if(!channelData)
+            return;
+
+        const canvas = canvasRef.current;
+        
+        const ctx = canvas.getContext("2d")!;
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = "orange";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        const lineWidth = 2;
+
+        ctx.fillStyle = "blue";
+
+        const start = 5000;
+        const size = 300;
+
+        for(let i = start; i < start + size; i++) {
+
+            let value = channelData[i];
+
+            if(value <= 0)
+                continue;
+
+            ctx.fillRect((i - start) * lineWidth, 0, lineWidth, value * canvas.height);
+        }
+
+        // ctx.fillStyle = "blue";
+        // ctx.fillRect(0, 0, lineWidth, canvas.height);
+    }, [channelData]);
 
     useEffect(() => {
 
-        const unsubscribeHandles: (() => void)[] = [];
+        const fetchAudio = async () => {
 
-        unsubscribeHandles.push(
-            regionsPluginRef.current.on('region-clicked', (region: Region) => {
+            const response = await fetch(audioFilepath);
+            const audioBlob = await response.arrayBuffer();
 
-                // region.color = "#0000ff";
+            const audioContext = new AudioContext();
+            const audioBuffer = await audioContext.decodeAudioData(audioBlob);
 
-                // setActiveRegion((prev) => {
+            if(audioBuffer.numberOfChannels == 1) {
 
-                //     if(prev)
-                //         prev.color = "#c78f00";
+                console.log("Drawing single channel");
 
-                //     region.color = "red";
+                const channelData = downsampleChannelData(audioBuffer.getChannelData(0), 10);
+                // drawWaveform(channelData, 0);
+                    
+            } else if(audioBuffer.numberOfChannels == 2) {
+        
+                console.log("Drawing two channels");
 
-                //     return region;
+                console.log(audioBuffer.sampleRate);
 
-                // });
+                const leftChannelData = downsampleChannelData(audioBuffer.getChannelData(0), 10);
+                const rightChannelData = downsampleChannelData(audioBuffer.getChannelData(1), 10);
 
-                // console.log(region);
-                // console.log('Region Clicked')
-            })
-        );
+                // drawWaveform(leftChannelData, 0);
+                // drawWaveform(rightChannelData, canvas.height / 2);
+                setChannelData(leftChannelData);
+                drawWaveform();
 
-        unsubscribeHandles.push(
-            regionsPluginRef.current.on('region-created', (region) => {
-                region.on('play', () => {
-                    console.log("HEY");
-                })
-            })
-        );
 
-        unsubscribeHandles.push(
-            regionsPluginRef.current.on('region-removed', () => {
-                console.log('Region Removed')
-            })
-        );
+            }
 
-        return () => {
-            unsubscribeHandles.forEach((handle) => { handle(); });
-            unsubscribeHandles.length = 0;
-
-            // visualizerRef.current?.removeEventListener('mousedown', deselectRegion);
         }
 
-    }, [regionsPluginRef.current, setActiveRegion]);
+        fetchAudio();
+
+    }, [audioFilepath, setChannelData, drawWaveform]);
+
 
     return (
         <section id="audio-visualizer">
-            <div id="waveform-container">
-                <div id="waveform" ref={visualizerRef}></div>
-            </div>
-
-            <div id="stats">
-                <div className="time">
-                    <h1>{formatTime(currentTime)}</h1>
-                    <h1>{duration}</h1>
-                    <h1>{activeRegion && activeRegion.start}</h1>
-                </div>
-                <button id="add-trigger" onClick={() => newTrigger(currentTime)}>New Trigger</button>
-            </div>
-        </section>
+            <canvas ref={canvasRef} onResize={() => drawWaveform()}></canvas>
+       </section>
     )
 
 };
