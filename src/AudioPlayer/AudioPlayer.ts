@@ -1,62 +1,70 @@
-import { readBinaryFile } from "@tauri-apps/api/fs";
-
-export class AudioSource {
-
-    private filepath: string;
-    private audioBuffer: AudioBuffer;
-
-    private constructor(filepath: string, audioBuffer: AudioBuffer) {
-        this.filepath = filepath;
-        this.audioBuffer = audioBuffer;
-    }
-
-    getAudioBuffer() : AudioBuffer { return this.audioBuffer; }
-    getFilepath() : string { return this.filepath; }
-
-    static async createAudioSourceFromFile(filepath: string) : Promise<AudioSource> {
-
-        const audioContext = new AudioContext();
-
-        const bytes = await readBinaryFile(filepath);
-        const audioBuffer = await audioContext.decodeAudioData(bytes.buffer);
-
-        return Promise.resolve(new AudioSource(filepath, audioBuffer));
-
-    }
-}
+import { convertFileSrc } from '@tauri-apps/api/tauri';
+import { Howl } from 'howler' 
 
 export class AudioPlayer {
 
-    private audioContext: AudioContext;
-    private source: AudioBufferSourceNode;
-    private currentTimeParam: AudioParam;
+    private filepath: string;
+    private source: Howl;
 
-    constructor(audioSource: AudioSource) {
+    private constructor(filepath: string, source: Howl) {
+        this.filepath = filepath;
+        this.source = source;
+    }
 
-        this.audioContext = new AudioContext();
+    static async createAudioPlayer(filepath: string): Promise<AudioPlayer> {
+        const sound = new Howl({
+            src: convertFileSrc(filepath),
+        });
 
-        this.source = this.audioContext.createBufferSource();
-        this.source.buffer = audioSource.getAudioBuffer();
-        this.source.connect(this.audioContext.destination);
+        return Promise.resolve(new AudioPlayer(filepath, sound));
+    }
 
-        this.currentTimeParam = this.audioContext.createConstantSource().offset;
-        this.currentTimeParam.value = 0;
+    getFilepath() : string { return this.filepath; }
 
+    isPlaying(): boolean {
+        return this.source.playing();
     }
 
     play() {
-        this.currentTimeParam.setValueAtTime(
-            this.audioContext.currentTime,
-            this.audioContext.currentTime
-        );
+        if(this.isPlaying())
+            this.source.stop();
 
-        this.source.start();
+        this.source.play();
     }
 
-    getDuration() : number { return this.source.buffer!.duration; }
-
-    getCurrentTime() : number {
-        return this.currentTimeParam.value;
+    pause() {
+        this.source.pause();
     }
-    
+
+    stop() {
+        this.source.stop();
+    }
+
+    playPause() {
+        if(this.isPlaying())
+            this.pause();
+        else
+            this.play();
+    }
+
+    getDuration(): number { 
+        return this.source.duration();
+    }
+
+    getCurrentTime(): number { 
+        return this.source.seek();
+    }
+
+    seekTo(seek: number) {
+        this.source.seek(seek);
+    }
+
 }
+
+// This function remains unnecessary with Howler.js
+
+// function resumeAudioContext() {
+//     // Not applicable with Howler.js
+// }
+
+// Remember to start playback on user interaction, not automatically.

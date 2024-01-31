@@ -11,12 +11,14 @@
   },
   "dependencies": {
     "@tauri-apps/api": "^1.5.2",
+    "howler": "^2.2.4",
     "react": "^18.2.0",
     "react-beautiful-dnd": "^13.1.1",
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
     "@tauri-apps/cli": "^1.5.8",
+    "@types/howler": "^2.2.11",
     "@types/react": "^18.2.15",
     "@types/react-beautiful-dnd": "^13.1.8",
     "@types/react-dom": "^18.2.7",
