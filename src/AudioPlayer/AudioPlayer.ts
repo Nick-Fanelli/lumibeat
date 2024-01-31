@@ -1,6 +1,18 @@
 import { convertFileSrc } from '@tauri-apps/api/tauri';
 import { Howl } from 'howler' 
 
+let audioPlayers : AudioPlayer[] = [];
+
+export const initializeAudioSystem = () => {
+
+    audioPlayers.forEach((player) => {
+        player.destroy();
+    });
+
+    audioPlayers = [];
+
+}
+
 export class AudioPlayer {
 
     private filepath: string;
@@ -9,6 +21,8 @@ export class AudioPlayer {
     private constructor(filepath: string, source: Howl) {
         this.filepath = filepath;
         this.source = source;
+
+        audioPlayers.push(this);
     }
 
     static async createAudioPlayer(filepath: string): Promise<AudioPlayer> {
@@ -16,7 +30,8 @@ export class AudioPlayer {
             src: convertFileSrc(filepath),
         });
 
-        return Promise.resolve(new AudioPlayer(filepath, sound));
+        const audioPlayer = new AudioPlayer(filepath, sound);
+        return Promise.resolve(audioPlayer);
     }
 
     getFilepath() : string { return this.filepath; }
@@ -59,12 +74,9 @@ export class AudioPlayer {
         this.source.seek(seek);
     }
 
+    destroy() {
+        this.stop();
+        this.source.unload();
+    }
+
 }
-
-// This function remains unnecessary with Howler.js
-
-// function resumeAudioContext() {
-//     // Not applicable with Howler.js
-// }
-
-// Remember to start playback on user interaction, not automatically.
