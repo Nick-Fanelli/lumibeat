@@ -10,6 +10,8 @@ type VisualizerProps = {
 
 }
 
+const formatTime = (seconds: number) => [seconds / 60, seconds % 60, (seconds % 1) * 1000].map((v) => `0${Math.floor(v)}`.slice(-2)).join(':');
+
 const Visualizer = (props: VisualizerProps) => {
 
     const visualizerRef = useRef<HTMLDivElement>(null);
@@ -22,15 +24,15 @@ const Visualizer = (props: VisualizerProps) => {
         const newPlayheadPosition = relativeClickPosition * props.audioPlayer.getDuration();
         const clampedPlayheadPosition = Math.min(Math.max(newPlayheadPosition, 0), props.audioPlayer.getDuration());
 
-        setPlayhead(clampedPlayheadPosition);
+        props.audioPlayer.seekTo(clampedPlayheadPosition);
 
-    }, [setPlayhead, visualizerRef.current]);
+    }, [props.audioPlayer, visualizerRef.current]);
 
     useEffect(() => {
 
         const playbackRefreshInterval = setInterval(() => {
             setPlayhead(props.audioPlayer.getCurrentTime());
-        }, 100);
+        }, 10);
 
         const handleMouseUp = (e: MouseEvent) => {
 
@@ -85,8 +87,7 @@ const Visualizer = (props: VisualizerProps) => {
                 </div>
 
                 <div className="controls">
-                    <input type="range" name="" id="" min={0} max={props.audioPlayer.getDuration()} value={playhead} onChange={(e) => setPlayhead(+e.target.value)} />
-                    <p>{playhead}</p>
+                    <p>{formatTime(playhead)}</p>
                 </div>
 
             </section>
@@ -101,11 +102,11 @@ const AudioVisualizer = () => {
 
     useEffect(() => {
 
+        console.log("New Audio Player");
+
         const loadAudio = async () => {
-
-            const source = await AudioSource.createAudioSourceFromFile("/Users/nickfanelli/Documents/DriveBy.mp3");
-            setAudioPlayer(new AudioPlayer(source));
-
+            const player = await AudioPlayer.createAudioPlayer("/Users/nickfanelli/Documents/DriveBy.mp3");
+            setAudioPlayer(player);
         }
 
         loadAudio();
@@ -118,10 +119,9 @@ const AudioVisualizer = () => {
         if(audioPlayer == null)
             return;
 
-        audioPlayer.play();
+        audioPlayer.playPause();
 
     }, [audioPlayer]);
-
 
     return (
 
