@@ -1,8 +1,8 @@
-import React, { lazy, useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 // import { convertFileSrc } from '@tauri-apps/api/tauri';
 
 import './AudioVisualizer.css'
-import { AudioPlayer, AudioSource } from '../AudioPlayer/AudioPlayer';
+import { AudioPlayer } from '../AudioPlayer/AudioPlayer';
 
 type VisualizerProps = {
 
