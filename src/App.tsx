@@ -1,4 +1,4 @@
-import CueList from "./CueList/CueLIst";
+import CueList from "./CueList/CueList";
 import Header from "./Header/Header";
 import SplitPane from "./SplitPane/SplitPane";
 
