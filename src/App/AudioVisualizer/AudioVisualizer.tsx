@@ -134,8 +134,6 @@ const AudioVisualizer = () => {
 
     useEffect(() => {
 
-        console.log("New Audio Player");
-
         const loadAudio = async () => {
             const player = await AudioPlayer.createAudioPlayer("/Users/nickfanelli/Documents/DriveBy.mp3");
             setAudioPlayer(player);

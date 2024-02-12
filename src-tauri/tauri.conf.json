@@ -40,17 +40,6 @@
     },
     "security": {
       "csp": null
-    },
-    "windows": [
-      {
-        "fullscreen": false,
-        "resizable": true,
-        "title": "Lumibeat-v1.0.0-alpha",
-        "width": 900,
-        "height": 700,
-        "minHeight": 550,
-        "minWidth": 900
-      }
-    ]
+    }
   }
 }
