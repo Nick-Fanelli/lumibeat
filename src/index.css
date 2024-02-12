@@ -60,5 +60,16 @@
 }
 
 button {
+
     cursor: pointer;
+    background-color: #1a3654;
+    border: none;
+    color: var(--text-color);
+    font-size: 1.2rem;
+    padding: 0.25em 0.5em;
+    border-radius: 6px;
+
 }
+
+button:hover { background-color: var(--button-hover-color); }
+button:active { background-color: var(--button-active-color); }

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 // import { convertFileSrc } from '@tauri-apps/api/tauri';
 
 import './AudioVisualizer.css'
@@ -6,7 +6,8 @@ import { AudioPlayer } from '../AudioPlayer/AudioPlayer';
 
 type VisualizerProps = {
 
-    audioPlayer: AudioPlayer
+    audioPlayer: AudioPlayer,
+    triggers: Trigger[]
 
 }
 
@@ -17,6 +18,8 @@ const Visualizer = (props: VisualizerProps) => {
     const visualizerRef = useRef<HTMLDivElement>(null);
 
     const [playhead, setPlayhead] = useState<number>(0);
+
+    const formattedDuration = useMemo(() => { return formatTime(props.audioPlayer.getDuration())}, [props.audioPlayer]);
 
     const onVisualizerClick = useCallback((x: number) => {
 
@@ -35,26 +38,35 @@ const Visualizer = (props: VisualizerProps) => {
         }, 10);
 
         const handleMouseUp = (e: MouseEvent) => {
+            
+            let value = e.clientX - visualizerRef.current!.offsetLeft;
+            value = Math.max(0, Math.min(value, visualizerRef.current!.offsetWidth))
+            
+            onVisualizerClick(value);
 
-            onVisualizerClick(e.offsetX);
-
-            visualizerRef.current?.removeEventListener('mousemove', handleMouseMove);
-            visualizerRef.current?.removeEventListener('mousemove', handleMouseUp);
+            document?.removeEventListener('mousemove', handleMouseMove);
+            document?.removeEventListener('mouseup', handleMouseUp);
 
         }
 
         const handleMouseMove = (e: MouseEvent) => {
 
-            onVisualizerClick(e.offsetX);
+            let value = e.clientX - visualizerRef.current!.offsetLeft;
+            value = Math.max(0, Math.min(value, visualizerRef.current!.offsetWidth))
+
+            onVisualizerClick(value);
 
         }
 
         const handleOnMouseDown = (e: MouseEvent) => {
 
-            onVisualizerClick(e.offsetX);
+            let value = e.clientX - visualizerRef.current!.offsetLeft;
+            value = Math.max(0, Math.min(value, visualizerRef.current!.offsetWidth))
 
-            visualizerRef.current?.addEventListener('mousemove', handleMouseMove);
-            visualizerRef.current?.addEventListener('mouseup', handleMouseUp);
+            onVisualizerClick(value);
+
+            document?.addEventListener('mousemove', handleMouseMove);
+            document?.addEventListener('mouseup', handleMouseUp);
 
         }
 
@@ -63,8 +75,8 @@ const Visualizer = (props: VisualizerProps) => {
         return () => {
 
             visualizerRef.current?.removeEventListener('mousedown', handleOnMouseDown);
-            visualizerRef.current?.removeEventListener('mousemove', handleMouseMove);
-            visualizerRef.current?.removeEventListener('mousemove', handleMouseUp);
+            document?.removeEventListener('mousemove', handleMouseMove);
+            document?.removeEventListener('mouseup', handleMouseUp);
 
             clearInterval(playbackRefreshInterval);
 
@@ -78,16 +90,29 @@ const Visualizer = (props: VisualizerProps) => {
 
                 <div className="waveform" ref={visualizerRef}>
 
+                    <div className="midline"></div>
+
+                    {
+                        props.triggers.map((trigger, index) => (
+                            <div key={index} className='trigger' style={{
+                                left: `${(trigger.timestamp / props.audioPlayer.getDuration()) * 100}`
+                            }}></div>
+                        ))
+                    }
+
                     <div className="playhead" style={{
                         left: `${(playhead / props.audioPlayer.getDuration()) * 100}%`
                     }}></div>
 
-                    <div className="midline"></div>
-
                 </div>
 
                 <div className="controls">
-                    <p>{formatTime(playhead)}</p>
+                    <div id="timestamp">
+                        <p>{formatTime(playhead)}</p>
+                        <p>/</p>
+                        <p>{formattedDuration}</p>
+                    </div>
+                    <div></div>
                 </div>
 
             </section>
@@ -96,9 +121,16 @@ const Visualizer = (props: VisualizerProps) => {
 
 }
 
+type Trigger = {
+
+    timestamp: number
+
+}
+
 const AudioVisualizer = () => {
 
     const [audioPlayer, setAudioPlayer] = useState<AudioPlayer | null>(null);
+    const [triggers, setTriggers] = useState<Trigger[]>([]);
 
     useEffect(() => {
 
@@ -113,6 +145,18 @@ const AudioVisualizer = () => {
 
 
     }, [setAudioPlayer]);
+
+
+    const addTriggerAtPlayhead = useCallback(() => {
+
+        if(audioPlayer == null)
+            return;
+
+        setTriggers((prev) => {
+            return [...prev, { timestamp: audioPlayer.getCurrentTime() }];
+        })
+
+    }, [audioPlayer, setTriggers]);
 
     const playPause = useCallback(() => {
 
@@ -131,6 +175,8 @@ const AudioVisualizer = () => {
                 <button onClick={() => {
                     playPause();
                 }}>Play Pause</button>
+
+                <button onClick={() => addTriggerAtPlayhead()}>Add Trigger</button>
             </div>
 
             {
@@ -138,7 +184,7 @@ const AudioVisualizer = () => {
                 <h1>Loading</h1>
                 :
                 <>
-                    <Visualizer audioPlayer={audioPlayer} />
+                    <Visualizer audioPlayer={audioPlayer} triggers={triggers} />
                 </>
             }
 
