@@ -72,7 +72,7 @@ fn open_app(handle: tauri::AppHandle, state: tauri::State<State>) {
 }
 
 fn main() {
-    
+
     let state = State {
 
         app_instances: Mutex::new(HashMap::new())

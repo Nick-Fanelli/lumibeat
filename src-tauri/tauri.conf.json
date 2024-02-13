@@ -21,6 +21,14 @@
         "asset": true,
         "assetScope": ["**"]
       },
+      "dialog": {
+        "all": false,
+        "ask": false,
+        "confirm": false,
+        "message": false,
+        "open": true,
+        "save": true
+      },
       "fs": {
         "readFile": true,
         "scope": ["**"]
