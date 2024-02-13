@@ -1,5 +1,6 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
+import { resolve } from "@tauri-apps/api/path";
 
 // https://vitejs.dev/config/
 export default defineConfig(async () => ({
@@ -18,4 +19,11 @@ export default defineConfig(async () => ({
       ignored: ["**/src-tauri/**"],
     },
   },
+  build: {
+    rollupOptions: {
+      input: {
+        'app': './app.html'
+      }
+    }
+  }
 }));
