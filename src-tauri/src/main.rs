@@ -72,7 +72,7 @@ fn open_app(handle: tauri::AppHandle, state: tauri::State<State>) {
 }
 
 fn main() {
-
+    
     let state = State {
 
         app_instances: Mutex::new(HashMap::new())
@@ -91,7 +91,7 @@ fn main() {
     tauri::WindowBuilder::new(
         &app,
         "launcher",
-        tauri::WindowUrl::App("launcher.html".into())
+        tauri::WindowUrl::App("index.html".into())
     )
         .title("Lumibeat Launcher")
         .inner_size(900.0, 700.0)
