@@ -34,11 +34,11 @@ fn get_app_window_info(window: tauri::Window, state: tauri::State<State>) -> Res
 
             let json_string = serde_json::to_string(&window_info).map_err(|e| e.to_string()).unwrap();
 
-            return Ok(json_string);
+            Ok(json_string)
         }
 
         None => {
-            return Err(String::from("Could not lookup"));
+            Err(String::from("Could not lookup"))
         }
 
     }    
@@ -73,33 +73,37 @@ fn open_app(handle: tauri::AppHandle, state: tauri::State<State>) {
 
 fn main() {
 
-    let state = State {
+    tauri::Builder::default()
+        .run(tauri::generate_context!())
+        .expect("unable to run tauri");
 
-        app_instances: Mutex::new(HashMap::new())
+    // let state = State {
 
-    };
+    //     app_instances: Mutex::new(HashMap::new())
 
-    let app = tauri::Builder::default()
-        .manage(state)
-        .invoke_handler(tauri::generate_handler![
-            open_app,
-            get_app_window_info
-        ])
-        .build(tauri::generate_context!())
-        .expect("Error creating app context");
+    // };
 
-    tauri::WindowBuilder::new(
-        &app,
-        "launcher",
-        tauri::WindowUrl::App("index.html".into())
-    )
-        .title("Lumibeat Launcher")
-        .inner_size(900.0, 700.0)
-        .resizable(false)
-        .fullscreen(false)
-    .build()
-    .expect("Failed to build launcher");
+    // let app = tauri::Builder::default()
+    //     .manage(state)
+    //     .invoke_handler(tauri::generate_handler![
+    //         open_app,
+    //         get_app_window_info
+    //     ])
+    //     .build(tauri::generate_context!())
+    //     .expect("Error creating app context");
 
-    app.run(|_, _| {});
+    // tauri::WindowBuilder::new(
+    //     &app,
+    //     "launcher",
+    //     tauri::WindowUrl::App("index.html".into())
+    // )
+    //     .title("Lumibeat Launcher")
+    //     .inner_size(900.0, 700.0)
+    //     .resizable(false)
+    //     .fullscreen(false)
+    // .build()
+    // .expect("Failed to build launcher");
+
+    // app.run(|_, _| {});
 
 }

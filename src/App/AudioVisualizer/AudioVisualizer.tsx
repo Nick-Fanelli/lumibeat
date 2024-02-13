@@ -19,7 +19,7 @@ const Visualizer = (props: VisualizerProps) => {
 
     const [playhead, setPlayhead] = useState<number>(0);
 
-    const formattedDuration = useMemo(() => { return formatTime(props.audioPlayer.getDuration())}, [props.audioPlayer]);
+    const formattedDuration = useMemo(() => formatTime(props.audioPlayer.getDuration()), [props.audioPlayer]);
 
     const onVisualizerClick = useCallback((x: number) => {
 

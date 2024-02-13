@@ -2,14 +2,14 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import '../index.css'
 
-import { open, save } from "@tauri-apps/api/dialog";
+import { save } from "@tauri-apps/api/dialog";
 import { invoke } from "@tauri-apps/api";
 
 const Launcher = () => {
 
-    const launchOpenDialog = () => {
+    // const launchOpenDialog = () => {
 
-    }
+    // }
     
     const launchCreateDialog = () => {
 

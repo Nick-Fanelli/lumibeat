@@ -48,6 +48,15 @@
     },
     "security": {
       "csp": null
-    }
+    },
+    "windows": [
+      {
+        "width": 900,
+        "height": 700,
+        "title": "Lumibeat Launcher",
+        "resizable": false,
+        "fullscreen": false
+      }
+    ]
   }
 }
