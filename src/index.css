@@ -18,17 +18,17 @@
 }
 
 :root {
-    --selected-color: #1052be;
+    --selected-color: #0063c6;
 
-    --background-color: #091a2a;
-    --secondary-background-color: #041524;
+    --background-color: #222222;
+    --secondary-background-color: #171717;
 
-    --secondary-separator-color: #192a3b;
-    --secondary-hover-color: #12263a;
+    --secondary-separator-color: #383838;
+    --secondary-hover-color: #373737;
 
-    --button-color: #112438;
-    --button-hover-color: #142940;
-    --button-active-color: #1a3450;
+    --button-color: #353535;
+    --button-hover-color: #3d3d3d;
+    --button-active-color: #545454;
 
     --text-color: #ced9e5;
     --unfocused-text-color: #373d45;
@@ -62,7 +62,7 @@
 button {
 
     cursor: pointer;
-    background-color: #1a3654;
+    background-color: var(--button-color);
     border: none;
     color: var(--text-color);
     font-size: 1.2rem;
