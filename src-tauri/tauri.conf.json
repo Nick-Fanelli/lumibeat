@@ -7,7 +7,7 @@
   },
   "package": {
     "productName": "lumibeat",
-    "version": "1.0.0"
+    "version": "0.0.0"
   },
   "tauri": {
     "allowlist": {
@@ -37,7 +37,7 @@
     "bundle": {
       "active": true,
       "targets": "all",
-      "identifier": "com.lumitechnologies.lumibeat",
+      "identifier": "com.lumitech.lumibeat",
       "icon": [
         "icons/32x32.png",
         "icons/128x128.png",
@@ -48,15 +48,6 @@
     },
     "security": {
       "csp": null
-    },
-    "windows": [
-      {
-        "width": 900,
-        "height": 700,
-        "title": "Lumibeat Launcher",
-        "resizable": false,
-        "fullscreen": false
-      }
-    ]
+    }
   }
 }
