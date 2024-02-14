@@ -73,37 +73,33 @@ fn open_app(handle: tauri::AppHandle, state: tauri::State<State>) {
 
 fn main() {
 
-    tauri::Builder::default()
-        .run(tauri::generate_context!())
-        .expect("unable to run tauri");
+    let state = State {
 
-    // let state = State {
+        app_instances: Mutex::new(HashMap::new())
 
-    //     app_instances: Mutex::new(HashMap::new())
+    };
 
-    // };
+    let app = tauri::Builder::default()
+        .manage(state)
+        .invoke_handler(tauri::generate_handler![
+            open_app,
+            get_app_window_info
+        ])
+        .build(tauri::generate_context!())
+        .expect("Error creating app context");
 
-    // let app = tauri::Builder::default()
-    //     .manage(state)
-    //     .invoke_handler(tauri::generate_handler![
-    //         open_app,
-    //         get_app_window_info
-    //     ])
-    //     .build(tauri::generate_context!())
-    //     .expect("Error creating app context");
+    tauri::WindowBuilder::new(
+        &app,
+        "launcher",
+        tauri::WindowUrl::App("index.html".into())
+    )
+        .title("Lumibeat Launcher")
+        .inner_size(900.0, 700.0)
+        .resizable(false)
+        .fullscreen(false)
+    .build()
+    .expect("Failed to build launcher");
 
-    // tauri::WindowBuilder::new(
-    //     &app,
-    //     "launcher",
-    //     tauri::WindowUrl::App("index.html".into())
-    // )
-    //     .title("Lumibeat Launcher")
-    //     .inner_size(900.0, 700.0)
-    //     .resizable(false)
-    //     .fullscreen(false)
-    // .build()
-    // .expect("Failed to build launcher");
-
-    // app.run(|_, _| {});
+    app.run(|_, _| {});
 
 }

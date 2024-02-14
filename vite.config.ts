@@ -22,6 +22,7 @@ export default defineConfig(async () => ({
   build: {
     rollupOptions: {
       input: {
+        'index': './index.html',
         'app': './app.html'
       }
     }
