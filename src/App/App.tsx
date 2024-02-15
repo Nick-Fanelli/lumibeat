@@ -1,8 +1,3 @@
-import React, { useEffect } from "react";
-import ReactDOM from "react-dom/client";
-import '../index.css'
-import { initializeAudioSystem } from "./AudioPlayer/AudioPlayer";
-
 import CueList from "./CueList/CueList";
 import Header from "./Header/Header";
 import SplitPane from "./SplitPane/SplitPane";
@@ -11,6 +6,8 @@ import './App.css'
 import Properties from "./Properties/Properties";
 import StatusBar from "./StatusBar/StatusBar";
 import { invoke } from "@tauri-apps/api";
+
+import { useEffect } from "react";
 
 interface WindowInfo {
 
@@ -50,11 +47,4 @@ const App = () => {
 
 };
 
-initializeAudioSystem();
-
-ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
-  <React.StrictMode>
-    <App />
-    <section id="bottom-resize-buffer" />
-  </React.StrictMode>,
-);
+export default App;
