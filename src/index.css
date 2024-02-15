@@ -13,7 +13,6 @@
     -moz-user-select: none;
     -webkit-user-select: none;
     -ms-user-select: none;
-    cursor: default;
 
 }
 
@@ -52,7 +51,6 @@
     right: 0;
 
     overflow: hidden;
-    /* overflow: scroll !important; */
 
     background-color: var(--background-color);
     color: var(--text-color);
@@ -61,7 +59,6 @@
 
 button {
 
-    cursor: pointer;
     background-color: var(--button-color);
     border: none;
     color: var(--text-color);

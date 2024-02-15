@@ -22,16 +22,14 @@
         "assetScope": ["**"]
       },
       "dialog": {
-        "all": false,
-        "ask": false,
-        "confirm": false,
-        "message": false,
-        "open": true,
-        "save": true
+        "all": true
       },
       "fs": {
-        "readFile": true,
+        "all": true,
         "scope": ["**"]
+      },
+      "path": {
+        "all": true
       }
     },
     "bundle": {
