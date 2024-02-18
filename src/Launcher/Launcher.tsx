@@ -2,17 +2,45 @@
 import '../index.css'
 import './Launcher.css'
 
-import { save } from "@tauri-apps/api/dialog";
+import { save, open } from "@tauri-apps/api/dialog";
 import { invoke } from "@tauri-apps/api";
 
 import { FaFolder, FaPlus, FaTrash } from "react-icons/fa";
 import Project from "../Project/Project";
+import { exists } from '@tauri-apps/api/fs';
 
 const Launcher = () => {
 
-    // const launchOpenDialog = () => {
+    const openShowfile = async (filepath: string) => {
 
-    // }
+        const showfileExists = await exists(filepath);
+
+        if(showfileExists) {
+            invoke('open_app', { filepath: filepath });
+        }
+
+    }
+
+    const launchOpenDialog = () => {
+
+        open({
+            directory: false,
+            multiple: false,
+            title: "Open Lumibeat Showfile",
+            filters: [{
+                name: "Lumibeat Show File",
+                extensions: [ 'lumishow' ]
+            }]
+        }).then((res) => {
+
+            if(res == null || res == undefined) {
+                return;
+            }
+
+            openShowfile(res.toString());
+        })
+
+    }
 
     const launchCreateDialog = () => {
 
@@ -26,17 +54,17 @@ const Launcher = () => {
             if(res == null || res == undefined)
                 return;
 
-            Project.initializeProjectDirectoryFromShowfile(res);
+            Project.initializeProjectDirectoryFromShowfile(res).then((res) => {
+
+                if(res == undefined || res == null)
+                    return;
+
+                openShowfile(res);
+
+            })
+
 
         })
-
-        // open({
-        //     directory: true,
-        //     multiple: false,
-        //     title: "Create New Project",
-        // }).then((res) => {
-        //     console.log(res);
-        // });
 
     }
 
@@ -62,7 +90,7 @@ const Launcher = () => {
                                 <p>Creates a new Lumibeat show file you can save to your local computer.</p>
                             </div>
                         </div>
-                        <div className="btn" onClick={() => invoke('open_app')}>
+                        <div className="btn" onClick={launchOpenDialog}>
                             <div className="icon-wrapper">
                                 <FaFolder className="icon" />
                             </div>
