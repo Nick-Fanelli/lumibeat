@@ -8,14 +8,22 @@ use uuid::Uuid;
 
 struct State {
 
-    app_instances: Mutex<HashMap<String, tauri::Window>>
+    app_instances: Mutex<HashMap<String, tauri::Window>>,
+    app_data: Mutex<HashMap<String, AppData>>
+
+}
+
+struct AppData {
+
+    show_file_path: String
 
 }
 
 #[derive(Debug, serde::Serialize)]
 struct WindowInfo {
 
-    window_uuid: String
+    window_uuid: String,
+    show_file_path: String
 
 }
 
@@ -23,13 +31,19 @@ struct WindowInfo {
 fn get_app_window_info(window: tauri::Window, state: tauri::State<State>) -> Result<String, String> {
 
     let app_instances = state.app_instances.lock().unwrap();
-    let lookup_window = app_instances.get(&String::from(window.label()));
+    let app_data = state.app_data.lock().unwrap();
+
+    let uuid_instance = String::from(window.label());
+
+    let lookup_window = app_instances.get(&uuid_instance);
+    let lookup_app_data = app_data.get(&uuid_instance).unwrap();
 
     match lookup_window {
 
         Some(value) => {
             let window_info = WindowInfo {
-                window_uuid: value.label().to_owned()
+                window_uuid: value.label().to_owned(),
+                show_file_path: lookup_app_data.show_file_path.clone()
             };
 
             let json_string = serde_json::to_string(&window_info).map_err(|e| e.to_string()).unwrap();
@@ -46,10 +60,12 @@ fn get_app_window_info(window: tauri::Window, state: tauri::State<State>) -> Res
 }
 
 #[tauri::command]
-fn open_app(handle: tauri::AppHandle, state: tauri::State<State>) {
+fn open_app(handle: tauri::AppHandle, state: tauri::State<State>, filepath: String) {
 
     let mut app_instances = state.app_instances.lock().unwrap();
+    let mut app_data = state.app_data.lock().unwrap();
 
+    // Generate UUID
     let mut window_uuid: String = "app-".into();
     window_uuid.push_str(&Uuid::new_v4().to_string());
 
@@ -67,7 +83,14 @@ fn open_app(handle: tauri::AppHandle, state: tauri::State<State>) {
     .build()
     .expect("Error making app window");
 
-    app_instances.insert(window_uuid, window);
+    let local_app_data = AppData {
+
+        show_file_path: filepath
+        
+    };
+
+    app_instances.insert(window_uuid.clone(), window);
+    app_data.insert(window_uuid.clone(), local_app_data);
 
 }
 
@@ -75,7 +98,8 @@ fn main() {
 
     let state = State {
 
-        app_instances: Mutex::new(HashMap::new())
+        app_instances: Mutex::new(HashMap::new()),
+        app_data: Mutex::new(HashMap::new())
 
     };
 

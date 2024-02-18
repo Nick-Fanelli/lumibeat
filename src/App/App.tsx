@@ -15,7 +15,7 @@ interface WindowInfo {
 
 }
 
-const App = () => {    
+const App = () => {
 
     useEffect(() => {
         invoke<string>('get_app_window_info').then((res) => {
