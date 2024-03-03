@@ -1,5 +1,5 @@
 import { createDir, readDir, writeFile } from "@tauri-apps/api/fs";
-import { dirname, join } from "@tauri-apps/api/path";
+import { basename, dirname, join } from "@tauri-apps/api/path";
 import { ask } from "@tauri-apps/api/dialog";
 import { generateSerializedGenericProjectStruct } from "./ProjectDataStructure";
 
@@ -38,9 +38,11 @@ namespace Project {
         // Create Resources Directory
         const resourcesPath = await join(parentDirectory, "Resources");
 
+        const projectName = (await basename(filepath)).split('.')[0];
+
         await Promise.all([
             createDir(resourcesPath), // Create Resources Directory
-            writeFile(filepath, generateSerializedGenericProjectStruct()) // Write Project Directory
+            writeFile(filepath, generateSerializedGenericProjectStruct(projectName)) // Write Project Directory
         ])
 
         return filepath;
