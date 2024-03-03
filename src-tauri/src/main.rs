@@ -60,7 +60,7 @@ fn get_app_window_info(window: tauri::Window, state: tauri::State<State>) -> Res
 }
 
 #[tauri::command]
-fn open_app(handle: tauri::AppHandle, state: tauri::State<State>, filepath: String) {
+async fn open_app(handle: tauri::AppHandle, state: tauri::State<'_, State>, filepath: String) -> Result<(), ()> {
 
     let mut app_instances = state.app_instances.lock().unwrap();
     let mut app_data = state.app_data.lock().unwrap();
@@ -91,6 +91,8 @@ fn open_app(handle: tauri::AppHandle, state: tauri::State<State>, filepath: Stri
 
     app_instances.insert(window_uuid.clone(), window);
     app_data.insert(window_uuid.clone(), local_app_data);
+
+    Ok(())
 
 }
 
