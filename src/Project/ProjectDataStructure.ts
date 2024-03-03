@@ -18,10 +18,10 @@ export const deserializeProjectStruct = (serializedProjectStruct: SerializedProj
 
 }
 
-export const generateSerializedGenericProjectStruct = () : SerializedProjectStruct => {
+export const generateSerializedGenericProjectStruct = (projectName: string) : SerializedProjectStruct => {
 
     const genericProject: ProjectStruct = {
-        name: undefined
+        name: projectName
     }
 
     return serializeProjectStruct(genericProject);
