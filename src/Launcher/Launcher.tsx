@@ -8,15 +8,14 @@ import { invoke } from "@tauri-apps/api";
 import { FaFolder, FaPlus, FaTrash } from "react-icons/fa";
 import Project from "../Project/Project";
 import { exists, readTextFile } from '@tauri-apps/api/fs';
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { deserializeProjectStruct } from '../Project/ProjectDataStructure';
 import { Cache } from '../Cache';
+import { signal } from '@preact/signals-react';
+
+const recentProjects = signal<Cache.RecentProject[]>([]);
 
 const Launcher = () => {
-
-    const [recentProjects, setRecentProjects] = useState<Cache.RecentProject[]>([]);
-    const [isCacheLoaded, setIsCacheLoaded] = useState<boolean>(false);
-
 
     // Load Cache
     useEffect(() => {
@@ -24,56 +23,40 @@ const Launcher = () => {
         const loadCache = async () => {
 
             const cache = await Cache.loadCache();
-            setRecentProjects(cache.recentProjects);
-
-            setIsCacheLoaded(true);
+            recentProjects.value = cache.recentProjects;
 
         }
 
         loadCache();
 
-    }, [setRecentProjects, setIsCacheLoaded]);
+    }, []);
 
-    useEffect(() => {
+    const reportOpenedShowFileToRecentCache = (recentProject: Cache.RecentProject) => {
+            
+        let shouldAppend = true;
 
-        if(isCacheLoaded) {
-            Cache.cache.recentProjects = recentProjects;
-            Cache.commitCache();
+        recentProjects.value.forEach((project) => {
+            if(project.showfilePath === recentProject.showfilePath) {
+                shouldAppend = false;
+                return;
+            }
+        })
+
+        if(shouldAppend) {
+            recentProjects.value = [recentProject, ...recentProjects.value];
+        } else {
+            recentProjects.value = [...recentProjects.value];
         }
 
-    }, [isCacheLoaded, recentProjects]);
+    }
 
-    const reportOpenedShowFileToRecentCache = useCallback((recentProject: Cache.RecentProject) => {
+    const removeRecentProject = (index: number) => {
 
-        setRecentProjects((prev) => {
+        if(index != -1) {
+            recentProjects.value = recentProjects.value.filter((_, i) => i !== index);
+        }
 
-            let shouldAppend = true;
-
-            prev.forEach((project) => {
-                if(project.showfilePath === recentProject.showfilePath) {
-                    shouldAppend = false;
-                    return;
-                }
-            });
-
-            if(shouldAppend)
-                return [recentProject, ...prev]
-            else
-                return [...prev];
-        });
-
-    }, [setRecentProjects]);
-
-    const removeRecentProject = useCallback((index: number) => {
-
-        setRecentProjects((prev) => {
-
-            const newArray = prev.splice(index, 1);
-            return [...newArray];
-
-        });
-
-    }, [setRecentProjects]);
+    }
 
     const openShowfile = async (filepath: string) => {
 
@@ -191,15 +174,16 @@ const Launcher = () => {
                     <div className="projects">
 
                         {
-                            recentProjects.map((recentProject, index) => (
+                            recentProjects.value.map((recentProject, index) => (
                                 <div className="project" key={index} onClick={() => {
                                     // TODO: ENSURE EXISTS AND IF NOT REMOVE FROM LIST
+
                                     openShowfile(recentProject.showfilePath);
                                 }}>
                                     <h1>{recentProject.projectName}</h1>
                                     <p>{recentProject.showfilePath}</p>
                                     <FaTrash className="x" onClick={() => {
-                                        removeRecentProject(index)
+                                        removeRecentProject(recentProjects.value.indexOf(recentProject, 0))
                                     }}></FaTrash>
                                 </div>
                             ))

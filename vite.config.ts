@@ -4,7 +4,11 @@ import { resolve } from "@tauri-apps/api/path";
 
 // https://vitejs.dev/config/
 export default defineConfig(async () => ({
-  plugins: [react()],
+  plugins: [react({
+    babel: {
+      plugins: [["module:@preact/signals-react-transform"]]
+    }
+  })],
 
   // Vite options tailored for Tauri development and only applied in `tauri dev` or `tauri build`
   //
@@ -26,5 +30,5 @@ export default defineConfig(async () => ({
         'app': './app.html'
       }
     }
-  }
+  },
 }));
