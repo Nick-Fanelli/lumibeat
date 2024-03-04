@@ -79,7 +79,6 @@ async fn open_app(handle: tauri::AppHandle, state: tauri::State<'_, State>, file
         .title("Lumibeat App")
         .inner_size(900.0, 700.0)
         .min_inner_size(900.0, 550.0)
-        .initialization_script(&format!("window.localStorage.setItem('windowUUID', {});", window_uuid))
     .build()
     .expect("Error making app window");
 

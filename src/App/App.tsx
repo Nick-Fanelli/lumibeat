@@ -7,7 +7,8 @@ import Properties from "./Properties/Properties";
 import StatusBar from "./StatusBar/StatusBar";
 import { invoke } from "@tauri-apps/api";
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
+import { signal } from "@preact/signals-react";
 
 interface WindowInfo {
 
@@ -15,20 +16,17 @@ interface WindowInfo {
 
 }
 
-const App = () => {
+const windowInfo = signal<WindowInfo | null>(null);
 
-    const [windowInfo, setWindowInfo] = useState<WindowInfo | null>(null);
+const App = () => {
 
     useEffect(() => {
         invoke<string>('get_app_window_info').then((res) => {
+            windowInfo.value = JSON.parse(res);
+        });
+    }, [windowInfo])
 
-            const windowInfo: WindowInfo = JSON.parse(res);
-            setWindowInfo(windowInfo)
-
-        })
-    }, [setWindowInfo])
-
-    if(windowInfo == null) {
+    if(windowInfo.value == null) {
         return <h1>Loading...</h1>
     }
 
