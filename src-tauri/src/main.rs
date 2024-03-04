@@ -76,7 +76,7 @@ async fn open_app(handle: tauri::AppHandle, state: tauri::State<'_, State>, file
     )
         .fullscreen(false)
         .resizable(true)
-        .title("Lumibeat App")
+        .title(&window_uuid)
         .inner_size(900.0, 700.0)
         .min_inner_size(900.0, 550.0)
     .build()
@@ -95,6 +95,30 @@ async fn open_app(handle: tauri::AppHandle, state: tauri::State<'_, State>, file
 
 }
 
+#[tauri::command]
+async fn set_window_title(state: tauri::State<'_, State>, window_uuid: String, title: String) -> Result<(), ()> {
+
+    let app_instances = state.app_instances.lock().unwrap();
+    let app = app_instances.get(&window_uuid);
+
+    match app {
+
+        Some(app) => {
+
+            let _ = app.set_title(title.as_str());
+            Ok(())
+
+        },
+
+        None => {
+            println!("Error: Could not find window with UUID of: {}", window_uuid);
+            Err(())
+        }
+
+    }
+
+}
+
 fn main() {
 
     let state = State {
@@ -108,7 +132,8 @@ fn main() {
         .manage(state)
         .invoke_handler(tauri::generate_handler![
             open_app,
-            get_app_window_info
+            get_app_window_info,
+            set_window_title
         ])
         .build(tauri::generate_context!())
         .expect("Error creating app context");
