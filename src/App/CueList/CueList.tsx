@@ -1,27 +1,13 @@
-import { LegacyRef, useCallback, useState } from 'react';
+import { LegacyRef } from 'react';
 import { DragDropContext, Draggable, DropResult, DraggableProvidedDraggableProps, DraggableProvidedDragHandleProps, } from 'react-beautiful-dnd';
 import './CueList.css'
 import { StrictModeDroppable } from './StrictModeDroppable';
-
-type Cue = {
-
-    id: string
-    name?: string
-    selected: boolean
-
-}
-
-const initialCues: Cue[] = [
-
-    { id: "0", name: "Hello World", selected: true },
-    { id: "1", name: "Hello World 2", selected: false },
-    { id: "2", name: "Hello World 3", selected: false }
-
-];
+import { Signal } from '@preact/signals-react';
+import Project from '../../Project/Project';
 
 type CueProps = {
 
-    cue: Cue
+    cue: Project.Cue
     innerRef: LegacyRef<HTMLDivElement> | undefined
     draggableProps: DraggableProvidedDraggableProps
     dragHandleProps: DraggableProvidedDragHandleProps | null | undefined
@@ -43,26 +29,26 @@ const Cue = (props: CueProps) => {
 
 }
 
-const CueList = () => {
+type CueListProps = {
 
-    const [cues, setCues] = useState(initialCues);
+    cues: Signal<Project.Cue[]>
 
-    const onDragEnd = useCallback((result: DropResult) => {
+}
+
+const CueList = ({cues}: CueListProps) => {
+
+    const onDragEnd = (result: DropResult) => {
         
-        setCues((prev) => {
+        if(!result.destination)
+            return;
 
-            if (!result.destination) 
-                return prev;
-            
-            const reorderedItems = Array.from(prev);
-            const [movedItem] = reorderedItems.splice(result.source.index, 1);
-            reorderedItems.splice(result.destination.index, 0, movedItem);
+        const reorderedItems = Array.from(cues.value);
+        const [movedItem] = reorderedItems.splice(result.source.index, 1);
+        reorderedItems.splice(result.destination.index, 0, movedItem);
 
-            return reorderedItems;
+        cues.value = reorderedItems;
 
-        });
-
-    }, [setCues]);
+    }
 
     return (
         <section id="cue-list">
@@ -78,7 +64,7 @@ const CueList = () => {
                         >
                             
                             {
-                                cues.map((item, index) => (
+                                cues.value.map((item, index) => (
 
                                     <Draggable key={item.id} draggableId={item.id} index={index}>
                                         {(provided) => (

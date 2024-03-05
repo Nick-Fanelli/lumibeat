@@ -11,6 +11,7 @@ import { useEffect } from "react";
 import { signal } from "@preact/signals-react";
 import ProjectStruct, { deserializeProjectStruct } from "../Project/ProjectDataStructure";
 import { readTextFile } from "@tauri-apps/api/fs";
+import Project from "../Project/Project";
 
 interface WindowInfo {
 
@@ -20,7 +21,9 @@ interface WindowInfo {
 }
 
 const windowInfo = signal<WindowInfo | null>(null);
+
 const currentProject = signal<ProjectStruct | null>(null);
+const cues = signal<Project.Cue[]>([]);
 
 const App = () => {
 
@@ -58,7 +61,7 @@ const App = () => {
 
             <SplitPane>
                 
-                <CueList />
+                <CueList cues={cues} />
                 <Properties />
 
             </SplitPane>

@@ -14,7 +14,7 @@ const SplitPane = (props: Props) => {
     const splitPaneRef = useRef<HTMLDivElement>(null);
 
     const [isDragging, setIsDragging] = useState<boolean>(false);
-    const [divPercentage, setDivPercentage] = useState<number>(30);
+    const [divPercentage, setDivPercentage] = useState<number>(60);
 
     const handleMouseUp = useCallback(() => {
 
