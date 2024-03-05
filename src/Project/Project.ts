@@ -5,6 +5,14 @@ import { generateSerializedGenericProjectStruct } from "./ProjectDataStructure";
 
 namespace Project {
 
+    export type Cue = {
+
+        id: string
+        name?: string
+        selected: boolean
+    
+    }
+
     export const initializeProjectDirectoryFromShowfile = async (filepath: string) : Promise<string | null>  => {
 
         // Ensure file ending

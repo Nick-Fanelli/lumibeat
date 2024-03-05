@@ -3,6 +3,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import './AudioVisualizer.css'
 import { AudioPlayer } from '../AudioPlayer/AudioPlayer';
+import { signal } from '@preact/signals-react';
 
 type VisualizerProps = {
 
@@ -106,15 +107,6 @@ const Visualizer = (props: VisualizerProps) => {
 
                 </div>
 
-                <div className="controls">
-                    <div id="timestamp">
-                        <p>{formatTime(playhead)}</p>
-                        <p>/</p>
-                        <p>{formattedDuration}</p>
-                    </div>
-                    <div></div>
-                </div>
-
             </section>
         </>
     )
@@ -126,6 +118,15 @@ type Trigger = {
     timestamp: number
 
 }
+
+enum ActiveVisualizerTab {
+
+    AUDIO,
+    TIMING
+
+}
+
+const activeVisualizerTab = signal<ActiveVisualizerTab>(ActiveVisualizerTab.AUDIO);
 
 const AudioVisualizer = () => {
 
@@ -170,11 +171,37 @@ const AudioVisualizer = () => {
         <section id="audio-visualizer">
 
             <div className="controls">
-                <button onClick={() => {
-                    playPause();
-                }}>Play Pause</button>
+                
+                <div className="tab-bar">
 
-                <button onClick={() => addTriggerAtPlayhead()}>Add Trigger</button>
+                    <div 
+                        className={`tab ${activeVisualizerTab.value == ActiveVisualizerTab.AUDIO ? 'selected' : ''}`}
+                        onClick={() => { activeVisualizerTab.value = ActiveVisualizerTab.AUDIO; }}
+                    >
+                        <h1>Audio</h1>
+                    </div>
+
+                    <div 
+                        className={`tab ${activeVisualizerTab.value == ActiveVisualizerTab.TIMING ? 'selected' : ''}`}
+                        onClick={() => { activeVisualizerTab.value = ActiveVisualizerTab.TIMING; }}
+                    >
+                        <h1>Timing</h1>
+                    </div>
+
+                </div>
+
+                <div className="content">
+                    
+                    <div className={`audio ${activeVisualizerTab.value != ActiveVisualizerTab.AUDIO ? 'hidden' : ''}`}>
+                        <button onClick={() => {
+                            playPause();
+                        }}>Play Pause</button>
+
+                        <button onClick={() => addTriggerAtPlayhead()}>Add Trigger</button>
+                    </div>
+
+                </div>
+
             </div>
 
             {
@@ -182,6 +209,14 @@ const AudioVisualizer = () => {
                 <h1>Loading</h1>
                 :
                 <>
+                    {/* <div className="controls">
+                        <div id="timestamp">
+                            <p>{formatTime(playhead)}</p>
+                            <p>/</p>
+                            <p>{formattedDuration}</p>
+                        </div>
+                        <div></div>
+                    </div> */}
                     <Visualizer audioPlayer={audioPlayer} triggers={triggers} />
                 </>
             }
