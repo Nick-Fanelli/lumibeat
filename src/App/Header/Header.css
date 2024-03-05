@@ -1,76 +1,41 @@
 #header {
 
     width: 100vw;
-    height: 125px;
+    height: 50px;
     background-color: var(--secondary-background-color);
 
+}
+
+#header > div.control-buttons {
+
+    width: 100%;
+    height: 100%;
+
     display: flex;
-    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+
+}
+
+#header > div.control-buttons > div {
+
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    width: 100%;
+
+    padding: 0 1em;
+
+}
+
+#header > div.control-buttons > div > .btn {
+
+    width: 30px;
+    height: 30px; 
+
+    background-color: var(--button-color);
+    display: flex;
     justify-content: center;
-    align-content: center;
-
-}
-
-#header > div {
-
-    width: 100vw;
-
-    display: flex;
-    justify-content: space-between;
-    padding: 0 2em;
-
-    /* background-color: blue; */
-
-}
-
-#header > div:nth-child(1) > div {
-
-    width: 100%;
-    padding: 0 0 0 5em;
-    display: flex;
-    justify-content: space-between;
-    flex-direction: column;
-
-}
-
-#header > div > button#go {
-
-    width: 180px;
-    height: 100px;
-    border-radius: 8px;
-    border: none;
-    font-size: 3rem;
-    font-weight: 700;
-
-    background-color: var(--button-color);
-    color: var(--text-color);
-
-}
-
-#header > div > button#go:hover { background-color: var(--button-hover-color); }
-#header > div > button#go:active { background-color: var(--button-active-color); }
-
-#header > div #cue-name {
-
-    width: 100%;
-    font-size: 1.75rem;
-    border-radius: 4px;
-    padding: 0.5rem 0.25rem;
-    background-color: var(--button-color);
-    border: none;
-    outline: none;
-    color: var(--text-color);
-
-}
-
-#header > div #cue-name:hover {
-
-    background-color: var(--button-hover-color);
-
-}
-
-#header > div #cue-name:focus {
-
-    background-color: var(--button-active-color);
+    align-items: center;
 
 }
