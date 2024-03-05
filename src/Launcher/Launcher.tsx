@@ -12,10 +12,13 @@ import { useEffect } from 'react';
 import { deserializeProjectStruct } from '../Project/ProjectDataStructure';
 import { Cache } from '../Cache';
 import { signal } from '@preact/signals-react';
+import { useAppVersion } from './CustomHooks/useAppVersion';
 
 const recentProjects = signal<Cache.RecentProject[]>([]);
 
 const Launcher = () => {
+
+    const appVersion = useAppVersion();
 
     // Load Cache
     useEffect(() => {
@@ -142,7 +145,7 @@ const Launcher = () => {
                 <div className="left">
                     <div>
                         <h1>Lumibeat</h1>
-                        <p>v0.0.0-alpha</p>
+                        <p>{appVersion}</p>
                     </div>
 
                     <div className="buttons">
