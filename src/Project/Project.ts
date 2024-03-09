@@ -7,9 +7,8 @@ namespace Project {
 
     export type Cue = {
 
-        id: string
+        uuid: string
         name?: string
-        selected: boolean
     
     }
 

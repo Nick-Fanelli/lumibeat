@@ -2,13 +2,22 @@ import { LegacyRef } from 'react';
 import { DragDropContext, Draggable, DropResult, DraggableProvidedDraggableProps, DraggableProvidedDragHandleProps, } from 'react-beautiful-dnd';
 import './CueList.css'
 import { StrictModeDroppable } from './StrictModeDroppable';
-import { Signal } from '@preact/signals-react';
 import Project from '../../Project/Project';
+import { Signal, signal } from '@preact/signals-react';
+import HiddenInputComponent from '../HiddenInputComponent/HiddenInputComponent';
+
+const selectedCues = signal<string[]>([]);
+
+const setActiveCue = (uuid: string) => {
+
+    selectedCues.value = [uuid];
+
+}
 
 type CueProps = {
 
     cue: Project.Cue
-    innerRef: LegacyRef<HTMLDivElement> | undefined
+    innerRef: LegacyRef<HTMLTableRowElement> | undefined
     draggableProps: DraggableProvidedDraggableProps
     dragHandleProps: DraggableProvidedDragHandleProps | null | undefined
 
@@ -16,16 +25,35 @@ type CueProps = {
 
 const Cue = (props: CueProps) => {
 
+    selectedCues.value;
+
+    const isCueSelected = (uuid: string) : boolean => {
+        return selectedCues.value.includes(uuid);
+    }
+
+    const setCueName = (name: string) => {
+
+        props.cue.name = name;
+
+    }
+
     return (
-        <div 
-            className={`cue ${props.cue.selected ? 'selected' : ''}`}
-            ref={props.innerRef}
-            {...props.draggableProps}
-        >
-            <h1>{props.cue.name}</h1>
-            <div className="hamburger-icon" {...props.dragHandleProps}>☰</div>
-        </div>
-    )
+
+        <>
+            <td className="info" style={{ width: "100px" }}>
+                <div className="machine-id"></div>
+                <div className="machine-highlight"></div>
+            </td>
+            <td className="cue-number" style={{ width: "100px" }}>
+                <h1>1</h1>
+            </td>
+            <td>
+                <h1>Hi</h1>
+            </td>
+            <td>{props.cue.name} 10</td>
+        </>
+
+    );
 
 }
 
@@ -36,6 +64,8 @@ type CueListProps = {
 }
 
 const CueList = ({cues}: CueListProps) => {
+
+    cues.value; // Make Reactive
 
     const onDragEnd = (result: DropResult) => {
         
@@ -53,43 +83,52 @@ const CueList = ({cues}: CueListProps) => {
     return (
         <section id="cue-list">
 
-            <DragDropContext onDragEnd={onDragEnd}>
+            <table id="cue-table">
 
-                <StrictModeDroppable droppableId='cueDroppable'>
-                    {(provided) => (
+                <thead>
+                    <tr>
+                        <th className="rigid"></th>
+                        <th>#</th>
+                        <th>Name</th>
+                        <th>Duration</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <DragDropContext onDragEnd={onDragEnd}>
+                        <StrictModeDroppable droppableId='cueDroppable'>
+                            {(provided) => (
 
-                        <div
-                            ref={provided.innerRef}
-                            {...provided.droppableProps}
-                        >
-                            
-                            {
-                                cues.value.map((item, index) => (
+                                <tr
+                                    ref={provided.innerRef}
+                                    {...provided.droppableProps}
+                                >
+                                    
+                                    {
+                                        cues.value.map((item, index) => {
 
-                                    <Draggable key={item.id} draggableId={item.id} index={index}>
-                                        {(provided) => (
+                                            return <Draggable key={item.uuid} draggableId={item.uuid} index={index}>
+                                                {(provided) => (
+                                                    <Cue 
+                                                        cue={item}
+                                                        innerRef={provided.innerRef}
+                                                        draggableProps={provided.draggableProps}
+                                                        dragHandleProps={provided.dragHandleProps}
+                                                    />
+                                                )}
 
-                                            <Cue 
-                                                cue={item}
-                                                innerRef={provided.innerRef}
-                                                draggableProps={provided.draggableProps}
-                                                dragHandleProps={provided.dragHandleProps}
-                                            />
+                                            </Draggable>
 
-                                        )}
+                                        })
+                                    }
 
-                                    </Draggable>
+                                    {provided.placeholder}
+                                </tr>
 
-                                ))
-                            }
-                            {provided.placeholder}
-                        </div>
-
-                    )}
-                </StrictModeDroppable>
-
-                
-            </DragDropContext>
+                            )}
+                            </StrictModeDroppable>
+                    </DragDropContext>
+                </tbody>
+            </table>
 
         </section>
     )
