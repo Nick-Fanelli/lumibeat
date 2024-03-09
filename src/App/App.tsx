@@ -12,6 +12,7 @@ import { signal } from "@preact/signals-react";
 import ProjectStruct, { deserializeProjectStruct } from "../Project/ProjectDataStructure";
 import { readTextFile } from "@tauri-apps/api/fs";
 import Project from "../Project/Project";
+import { v4 as uuidv4 } from 'uuid';
 
 interface WindowInfo {
 
@@ -23,7 +24,13 @@ interface WindowInfo {
 const windowInfo = signal<WindowInfo | null>(null);
 
 const currentProject = signal<ProjectStruct | null>(null);
-const cues = signal<Project.Cue[]>([]);
+export const cues = signal<Project.Cue[]>([]);
+
+export const addCue = () => {
+
+    cues.value = [...cues.value, { uuid: uuidv4(), name: "Some Name" }];
+
+}
 
 const App = () => {
 
