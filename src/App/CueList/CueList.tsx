@@ -1,14 +1,13 @@
-import { LegacyRef } from 'react';
-import { DragDropContext, Draggable, DropResult, DraggableProvidedDraggableProps, DraggableProvidedDragHandleProps, } from 'react-beautiful-dnd';
+import { LegacyRef, useCallback } from 'react';
+import { DropResult, DraggableProvidedDraggableProps, DraggableProvidedDragHandleProps, } from 'react-beautiful-dnd';
 import './CueList.css'
-import { StrictModeDroppable } from './StrictModeDroppable';
-import Project from '../../Project/Project';
+import Project, { UUID } from '../../Project/Project';
 import { Signal, signal } from '@preact/signals-react';
-import HiddenInputComponent from '../HiddenInputComponent/HiddenInputComponent';
+import CueComponent from './CueComponent';
 
-const selectedCues = signal<string[]>([]);
+const selectedCues = signal<UUID[]>([]);
 
-const setActiveCue = (uuid: string) => {
+const setActiveCue = (uuid: UUID) => {
 
     selectedCues.value = [uuid];
 
@@ -26,16 +25,6 @@ type CueProps = {
 const Cue = (props: CueProps) => {
 
     selectedCues.value;
-
-    const isCueSelected = (uuid: string) : boolean => {
-        return selectedCues.value.includes(uuid);
-    }
-
-    const setCueName = (name: string) => {
-
-        props.cue.name = name;
-
-    }
 
     return (
 
@@ -63,20 +52,80 @@ type CueListProps = {
 
 }
 
+const reorderArray = (list: any[], sourceIndex: number, destinationIndex: number) : any[] => {
+    const result = Array.from(list);
+    const [ removed ] = result.splice(sourceIndex, 1);
+    result.splice(destinationIndex, 0, removed);
+
+    return result;
+}
+
+
 const CueList = ({cues}: CueListProps) => {
 
     cues.value; // Make Reactive
 
-    const onDragEnd = (result: DropResult) => {
-        
-        if(!result.destination)
-            return;
+    const moveCue = (sourceUUID: UUID, sourceIndex: number, destinatonIndex: number) => {
 
-        const reorderedItems = Array.from(cues.value);
-        const [movedItem] = reorderedItems.splice(result.source.index, 1);
-        reorderedItems.splice(result.destination.index, 0, movedItem);
+        let reorderedCues = [...cues.value];
 
-        cues.value = reorderedItems;
+        if(selectedCues.value.length <= 1 || !selectedCues.value.includes(sourceUUID)) {
+
+            reorderedCues = reorderArray(reorderedCues, sourceIndex, destinatonIndex + (sourceIndex > destinatonIndex ? 1 : 0));
+
+        } else {
+
+            let targetCues: Project.Cue[] = [];
+            let firstSelectedDestinationIndex: number | null = null;
+
+            for(let i = 0; i < reorderedCues.length; i++) {
+                
+                const targetUUID = reorderedCues[i].uuid;
+                const selectionIndex = selectedCues.value.indexOf(targetUUID);
+
+                if(selectionIndex !== -1) {
+                    if(!firstSelectedDestinationIndex)
+                        firstSelectedDestinationIndex = i;
+
+                    targetCues.push(reorderedCues[i]);
+                    reorderedCues.splice(i, 1);
+                    i--;
+                }
+
+            }
+
+            if(firstSelectedDestinationIndex !== null) {
+                reorderedCues.splice(destinatonIndex + (firstSelectedDestinationIndex > destinatonIndex ? 1 : -1), 0, ...targetCues);
+            }
+
+        }
+
+        cues.value = reorderedCues;
+
+    }
+
+    const reportOnCueClick = (event: React.MouseEvent, uuid: UUID) => {
+
+        if(event.shiftKey) { // Shift Through Multi-Select
+
+        } else if(event.ctrlKey) { // TODO: MAKE WORK
+
+        } else {
+            selectedCues.value = [uuid];
+        }
+
+    }
+
+    const deleteCue = (cue: UUID) => {
+
+        const selectionIndex = selectedCues.value.indexOf(cue);
+
+        if(selectionIndex !== -1) {
+            selectedCues.value = selectedCues.value.splice(selectionIndex, 1);
+        }
+
+        const updatedCues = Project.removeCueFromListByUUID(cues.value, cue);
+        cues.value = updatedCues;
 
     }
 
@@ -94,39 +143,9 @@ const CueList = ({cues}: CueListProps) => {
                     </tr>
                 </thead>
                 <tbody>
-                    <DragDropContext onDragEnd={onDragEnd}>
-                        <StrictModeDroppable droppableId='cueDroppable'>
-                            {(provided) => (
-
-                                <tr
-                                    ref={provided.innerRef}
-                                    {...provided.droppableProps}
-                                >
-                                    
-                                    {
-                                        cues.value.map((item, index) => {
-
-                                            return <Draggable key={item.uuid} draggableId={item.uuid} index={index}>
-                                                {(provided) => (
-                                                    <Cue 
-                                                        cue={item}
-                                                        innerRef={provided.innerRef}
-                                                        draggableProps={provided.draggableProps}
-                                                        dragHandleProps={provided.dragHandleProps}
-                                                    />
-                                                )}
-
-                                            </Draggable>
-
-                                        })
-                                    }
-
-                                    {provided.placeholder}
-                                </tr>
-
-                            )}
-                            </StrictModeDroppable>
-                    </DragDropContext>
+                        {cues.value.map((cue, index) => (
+                            <CueComponent key={index} index={index} cue={cue} moveCue={moveCue} reportOnCueClick={reportOnCueClick} cueSelection={selectedCues} deleteCue={deleteCue} />
+                        ))}
                 </tbody>
             </table>
 
