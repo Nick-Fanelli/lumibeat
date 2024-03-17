@@ -167,6 +167,7 @@ const Launcher = () => {
                                 <p>Opens an existing show file on your local computer to be run.</p>
                             </div>
                         </div>
+                        
                     </div>
                 </div>
 

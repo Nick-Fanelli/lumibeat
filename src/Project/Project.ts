@@ -3,13 +3,47 @@ import { basename, dirname, join } from "@tauri-apps/api/path";
 import { ask } from "@tauri-apps/api/dialog";
 import { generateSerializedGenericProjectStruct } from "./ProjectDataStructure";
 
+export type UUID = string;
+
 namespace Project {
 
     export type Cue = {
 
-        uuid: string
+        uuid: UUID
         name?: string
+        number?: number
     
+    }
+
+    export const getIndexByUUID = (cues: ReadonlyArray<Cue>, uuid: UUID): number => {
+        return cues.findIndex(cue => cue.uuid === uuid);
+    }
+
+    export const getIndexByUUIDCallback = (cues: ReadonlyArray<Cue>, uuid: UUID, callback: (index: number) => Cue[]) : Cue[] => {
+        const index = getIndexByUUID(cues, uuid);
+
+        if(index === -1) {
+            console.warn(`Could not find cue with UUID of: '${uuid}' in the array of cues`);
+            return [...cues];
+        }
+
+        return callback(index);
+    }
+
+    export const removeCueFromListByUUID = (constCues: ReadonlyArray<Cue>, uuid: UUID) => {
+
+        let cues = [...constCues];
+
+
+        return getIndexByUUIDCallback(cues, uuid, (index: number) => {
+
+            cues.splice(index, 1);
+
+            return cues;
+
+        });
+        
+
     }
 
     export const initializeProjectDirectoryFromShowfile = async (filepath: string) : Promise<string | null>  => {
