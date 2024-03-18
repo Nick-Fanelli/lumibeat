@@ -1,50 +1,9 @@
-import { LegacyRef, useCallback } from 'react';
-import { DropResult, DraggableProvidedDraggableProps, DraggableProvidedDragHandleProps, } from 'react-beautiful-dnd';
 import './CueList.css'
 import Project, { UUID } from '../../Project/Project';
 import { Signal, signal } from '@preact/signals-react';
 import CueComponent from './CueComponent';
 
 const selectedCues = signal<UUID[]>([]);
-
-const setActiveCue = (uuid: UUID) => {
-
-    selectedCues.value = [uuid];
-
-}
-
-type CueProps = {
-
-    cue: Project.Cue
-    innerRef: LegacyRef<HTMLTableRowElement> | undefined
-    draggableProps: DraggableProvidedDraggableProps
-    dragHandleProps: DraggableProvidedDragHandleProps | null | undefined
-
-}
-
-const Cue = (props: CueProps) => {
-
-    selectedCues.value;
-
-    return (
-
-        <>
-            <td className="info" style={{ width: "100px" }}>
-                <div className="machine-id"></div>
-                <div className="machine-highlight"></div>
-            </td>
-            <td className="cue-number" style={{ width: "100px" }}>
-                <h1>1</h1>
-            </td>
-            <td>
-                <h1>Hi</h1>
-            </td>
-            <td>{props.cue.name} 10</td>
-        </>
-
-    );
-
-}
 
 type CueListProps = {
 
@@ -62,8 +21,6 @@ const reorderArray = (list: any[], sourceIndex: number, destinationIndex: number
 
 
 const CueList = ({cues}: CueListProps) => {
-
-    cues.value; // Make Reactive
 
     const moveCue = (sourceUUID: UUID, sourceIndex: number, destinatonIndex: number) => {
 
@@ -143,9 +100,11 @@ const CueList = ({cues}: CueListProps) => {
                     </tr>
                 </thead>
                 <tbody>
-                        {cues.value.map((cue, index) => (
-                            <CueComponent key={index} index={index} cue={cue} moveCue={moveCue} reportOnCueClick={reportOnCueClick} cueSelection={selectedCues} deleteCue={deleteCue} />
-                        ))}
+                    {
+                        cues.value.map((cue, index) => (
+                            <CueComponent key={index} index={index} cues={cues} cue={cue} moveCue={moveCue} reportOnCueClick={reportOnCueClick} cueSelection={selectedCues} deleteCue={deleteCue} />
+                        ))
+                    }
                 </tbody>
             </table>
 
