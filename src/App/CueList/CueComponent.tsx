@@ -1,14 +1,15 @@
-import { Signal } from "@preact/signals-react"
+import { Signal, useSignal } from "@preact/signals-react"
 import Project, { UUID } from "../../Project/Project";
 import { useState } from "react";
 import DropTarget from "../DragDrop/DropTarget";
 import Draggable from "../DragDrop/Draggable";
 import HiddenInputComponent from "../HiddenInputComponent/HiddenInputComponent";
 import ContextMenuComponent from "./ContextMenu";
+import { useSignalValue } from "../Hooks/useSignalValue";
 
 type CueComponentProps = {
 
-
+    cues: Signal<Project.Cue[]>,
     cueSelection: Signal<string[]>,
 
     moveCue: (sourceUUID: UUID, sourceIndex: number, destinationIndex: number) => void,
@@ -29,13 +30,19 @@ type ContextMenuData = {
 
 }
 
-const CueComponent = ({ cueSelection, moveCue, reportOnCueClick, deleteCue, cue, index }: CueComponentProps) => {
+const CueComponent = ({ cues, cueSelection, moveCue, reportOnCueClick, deleteCue, cue, index }: CueComponentProps) => {
 
     const [ contextMenu, setContextMenu ] = useState<ContextMenuData>({ isVisible: false, x: 0, y: 0 });
 
-    const updateCueByUUID = (uuid: UUID, cue: (cue: Project.Cue) => Project.Cue) => {
+    const updateCueByUUID = (uuid: UUID, cueCallback: (cue: Project.Cue) => Project.Cue) => {
 
+        const targetCueIndex = cues.value.findIndex((cue) => cue.uuid === uuid);
 
+        if(targetCueIndex != -1) {
+            const updatedCues = [...cues.value];
+            updatedCues[targetCueIndex] = cueCallback(cues.value[targetCueIndex]);
+            cues.value = updatedCues;
+        }
 
     } 
 

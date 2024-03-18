@@ -13,18 +13,15 @@
     "@tauri-apps/api": "^1.5.2",
     "howler": "^2.2.4",
     "react": "^18.2.0",
-    "react-beautiful-dnd": "^13.1.1",
     "react-dom": "^18.2.0",
     "react-icons": "^5.0.1",
-    "uuidv4": "^6.2.13",
-    "zustand": "^4.5.0"
+    "uuidv4": "^6.2.13"
   },
   "devDependencies": {
     "@preact/signals-react-transform": "^0.3.0",
     "@tauri-apps/cli": "^1.5.8",
     "@types/howler": "^2.2.11",
     "@types/react": "^18.2.15",
-    "@types/react-beautiful-dnd": "^13.1.8",
     "@types/react-dom": "^18.2.7",
     "@vitejs/plugin-react": "^4.2.1",
     "typescript": "^5.0.2",
