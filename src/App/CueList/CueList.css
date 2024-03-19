@@ -52,13 +52,6 @@
 
 } 
 
-
-#cue-list .cue.selected {
-
-    background-color: var(--selected-color) !important;
-
-}
-
 #cue-list .cue > .hamburger-icon {
 
     height: 100%;
@@ -151,11 +144,6 @@
 
 }
 
-#cue-list tbody tr.selected {
-
-    background-color: var(--selection-color) !important;
-
-}
 
 #cue-list tbody tr.light {
 
@@ -164,7 +152,7 @@
     opacity: 1;
     height: var(--local-height);
     width: 100%;
-    background-color: var(--selection-color);
+    background-color: var(--selected-color);
     transform: translateY(calc(var(--height) / 2 - var(--local-height) / 2));
     border: none;
     pointer-events: none;
@@ -209,5 +197,17 @@
 #cue-list tr.odd {
 
     background-color: var(--odd-cue-color);
+
+}
+
+#cue-list .cue.selected {
+
+    background-color: var(--selected-color) !important;
+
+}
+
+#cue-list tbody tr.selected {
+
+    background-color: var(--selected-color) !important;
 
 }

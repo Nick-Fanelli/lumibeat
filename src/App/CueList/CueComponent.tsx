@@ -5,6 +5,7 @@ import DropTarget from "../DragDrop/DropTarget";
 import Draggable from "../DragDrop/Draggable";
 import HiddenInputComponent from "../HiddenInputComponent/HiddenInputComponent";
 import ContextMenuComponent from "./ContextMenu";
+import { useSignalValue } from "../Hooks/useSignalValue";
 
 type CueComponentProps = {
 
@@ -30,6 +31,9 @@ type ContextMenuData = {
 }
 
 const CueComponent = ({ cues, cueSelection, moveCue, reportOnCueClick, deleteCue, cue, index }: CueComponentProps) => {
+
+    useSignalValue(cueSelection);
+    useSignalValue(cues);
 
     const [ contextMenu, setContextMenu ] = useState<ContextMenuData>({ isVisible: false, x: 0, y: 0 });
 
@@ -59,10 +63,8 @@ const CueComponent = ({ cues, cueSelection, moveCue, reportOnCueClick, deleteCue
     const closeContextMenu = () => setContextMenu({ isVisible: false, x: 0, y: 0 });
 
     return (
-        <DropTarget key={cue.uuid + "drop-target"} acceptOnly={['cue']}
+        <DropTarget key={`drop-target@${cue.uuid}`} acceptOnly={['cue']}
             onDrop={(dropID, dropData) => {
-                console.log("DROP");
-
                 if(dropID === 'cue') {
                     moveCue(dropData.uuid, dropData.index, index);
                 }
@@ -75,7 +77,7 @@ const CueComponent = ({ cues, cueSelection, moveCue, reportOnCueClick, deleteCue
         >
             {(dropTargetProvided, dropTargetSnapshot) => (
                 <Draggable
-                    key={cue.uuid.toString() + '-draggable'}
+                    key={`draggable&${cue.uuid}`}
                     dragID='cue'
                     dropData={{ uuid: cue.uuid, index }}
                     validationString={index.toString()}
@@ -109,87 +111,85 @@ const CueComponent = ({ cues, cueSelection, moveCue, reportOnCueClick, deleteCue
                             left: 0;
                         `
 
-                        element.setAttribute('key', cue.uuid.toString() + '-custom-draggable-element');
+                        element.setAttribute('key', `custom-draggable-element@${cue.uuid.toString()}`);
 
                         return element;
 
                     }}
                 >
                     {(provided, snapshot) => ([
-                        <>
-                            <tr
-                                key={cue.uuid + 'cue-elm'}
-                                className={`${cueSelection.value.includes(cue.uuid) ? 'selected' : ''} ${index % 2 !== 0 ? 'odd' : ''} ${snapshot.isBeingDragged ? 'beingDragged' : ''}`}
-                                onClick={(event) => { reportOnCueClick(event, cue.uuid) }}
-                                {...provided}
-                                {...dropTargetProvided}
+                        <tr
+                            key={`cue-elem@${cue.uuid}`}
+                            className={`${cueSelection.value.includes(cue.uuid) ? 'selected' : ''} ${index % 2 !== 0 ? 'odd' : ''} ${snapshot.isBeingDragged ? 'beingDragged' : ''}`}
+                            onClick={(event) => { reportOnCueClick(event, cue.uuid) }}
+                            {...provided}
+                            {...dropTargetProvided}
 
-                                onContextMenu={ (event) => handleContextMenu(event) }
-                            >
-                                <td className="info" style={{ width: "100px" }}>
-                                    <div className="machine-id"></div>
-                                    <div className="machine-highlight"></div>
-                                </td>
-                                <td className="cue-number" style={{ width: "100px" }}>
-                                    <HiddenInputComponent type="number" value={cue.number || ""} setValue={(newValue: string) => {
-                                        updateCueByUUID(cue.uuid, (prevCue) => {
-                                            return {
-                                                ...prevCue,
-                                                number: newValue.length === 0 ? undefined : +newValue
-                                            }
-                                        })
-                                    }} />
-                                </td>
-                                <td>
-                                    <HiddenInputComponent value={cue.name || ""} setValue={(newValue: string) => {
-                                        updateCueByUUID(cue.uuid, (prevCue) => {
-                                            return {
-                                                ...prevCue,
-                                                name: newValue
-                                            }
-                                        })
-                                    }} />
-                                </td>
-                                <td>{cue.name} {cue.number}</td>
-                            </tr>
-                            {
-                                contextMenu.isVisible && <ContextMenuComponent
+                            onContextMenu={ (event) => handleContextMenu(event) }
+                        >
+                            <td className="info" style={{ width: "100px" }}>
+                                <div className="machine-id"></div>
+                                <div className="machine-highlight"></div>
+                            </td>
+                            <td className="cue-number" style={{ width: "100px" }}>
+                                <HiddenInputComponent type="number" value={cue.number || ""} setValue={(newValue: string) => {
+                                    updateCueByUUID(cue.uuid, (prevCue) => {
+                                        return {
+                                            ...prevCue,
+                                            number: newValue.length === 0 ? undefined : +newValue
+                                        }
+                                    })
+                                }} />
+                            </td>
+                            <td>
+                                <HiddenInputComponent value={cue.name || ""} setValue={(newValue: string) => {
+                                    updateCueByUUID(cue.uuid, (prevCue) => {
+                                        return {
+                                            ...prevCue,
+                                            name: newValue
+                                        }
+                                    })
+                                }} />
+                            </td>
+                            <td>{cue.name} {cue.number}</td>
+                        </tr>,
 
-                                        x={contextMenu.x}
-                                        y={contextMenu.y}
+                        contextMenu.isVisible && <ContextMenuComponent
 
-                                        closeContextMenu={closeContextMenu}
+                            x={contextMenu.x}
+                            y={contextMenu.y}
 
-                                        menuItems={[
+                            closeContextMenu={closeContextMenu}
 
-                                            {
-                                                type: 'MenuItem', label: "Copy", onClick: () => {
+                            menuItems={[
 
-                                                }
-                                            },
+                                {
+                                    type: 'MenuItem', label: "Copy", onClick: () => {
 
-                                            {
-                                                type: 'MenuItem', label: "Paste After", onClick: () => {
+                                    }
+                                },
 
-                                                }
-                                            },
+                                {
+                                    type: 'MenuItem', label: "Paste After", onClick: () => {
 
-                                            {
-                                                type: "Separator"
-                                            },
+                                    }
+                                },
 
-                                            { type: 'MenuItem', label: "Delete", onClick: () => {
-                                                deleteCue(cue.uuid);
-                                                closeContextMenu();
-                                            }}
+                                {
+                                    type: "Separator"
+                                },
 
-                                        ]}
+                                { type: 'MenuItem', label: "Delete", onClick: () => {
+                                    deleteCue(cue.uuid);
+                                    closeContextMenu();
+                                }}
 
-                                />
-                            }
-                        </>,
+                            ]}
+
+                        />,
+                        
                         dropTargetSnapshot.isDraggedOver ?
-                        <tr className="light" key={cue.uuid + 'cue-light'}></tr>
+                            <tr className="light" key={`cue-light@${cue.uuid}`}></tr>
                         : null
                     ])}
                 </Draggable>
