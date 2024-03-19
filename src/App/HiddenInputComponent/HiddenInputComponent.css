@@ -11,7 +11,7 @@ input.hidden-input {
 
 input.hidden-input:focus {
 
-    border: solid 1px var(--selection-color);
+    border: solid 1px var(--selected-color);
     cursor: text;
 
 }
