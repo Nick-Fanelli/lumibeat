@@ -1,11 +1,10 @@
-import { Signal, useSignal } from "@preact/signals-react"
+import { Signal } from "@preact/signals-react"
 import Project, { UUID } from "../../Project/Project";
 import { useState } from "react";
 import DropTarget from "../DragDrop/DropTarget";
 import Draggable from "../DragDrop/Draggable";
 import HiddenInputComponent from "../HiddenInputComponent/HiddenInputComponent";
 import ContextMenuComponent from "./ContextMenu";
-import { useSignalValue } from "../Hooks/useSignalValue";
 
 type CueComponentProps = {
 
@@ -62,6 +61,8 @@ const CueComponent = ({ cues, cueSelection, moveCue, reportOnCueClick, deleteCue
     return (
         <DropTarget key={cue.uuid + "drop-target"} acceptOnly={['cue']}
             onDrop={(dropID, dropData) => {
+                console.log("DROP");
+
                 if(dropID === 'cue') {
                     moveCue(dropData.uuid, dropData.index, index);
                 }
@@ -74,16 +75,16 @@ const CueComponent = ({ cues, cueSelection, moveCue, reportOnCueClick, deleteCue
         >
             {(dropTargetProvided, dropTargetSnapshot) => (
                 <Draggable
-                    key={cue.uuid.toString() + 'draggable'}
+                    key={cue.uuid.toString() + '-draggable'}
                     dragID='cue'
                     dropData={{ uuid: cue.uuid, index }}
                     validationString={index.toString()}
                     customCreateDraggableElement={() => {
                         let element = document.createElement('div');
 
-                        let content: string = (cue.number !== null ? `${cue.number}. ` : '') + (cue.name !== null ? cue.name : '');
+                        let content: string = (cue.number ? `${cue.number}. ` : '') + (cue.name !== null ? cue.name : '');
 
-                        if(content.trim().length === 0)
+                        if(!content || content.trim().length === 0)
                             content = "Unnamed Cue";
 
                         element.innerHTML = `
@@ -108,7 +109,7 @@ const CueComponent = ({ cues, cueSelection, moveCue, reportOnCueClick, deleteCue
                             left: 0;
                         `
 
-                        element.setAttribute('key', cue.uuid + '-custom-draggable-element');
+                        element.setAttribute('key', cue.uuid.toString() + '-custom-draggable-element');
 
                         return element;
 
