@@ -1,4 +1,4 @@
-import { getVersion } from "@tauri-apps/api/app";
+import { getVersion } from "@tauri-apps/plugin-app";
 import { useEffect, useState } from "react";
 
 export const useAppVersion = () => {
@@ -7,7 +7,10 @@ export const useAppVersion = () => {
 
     useEffect(() => {
 
-        getVersion().then((res) => setVersion(res));
+        getVersion().then((res) => {
+            console.log(res);
+            setVersion(res)
+        });
 
     }, [setVersion]);
 

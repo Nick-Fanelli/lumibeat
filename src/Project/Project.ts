@@ -1,6 +1,6 @@
-import { createDir, readDir, writeFile } from "@tauri-apps/api/fs";
+import { mkdir, readDir, writeTextFile } from "@tauri-apps/plugin-fs";
 import { basename, dirname, join } from "@tauri-apps/api/path";
-import { ask } from "@tauri-apps/api/dialog";
+import { ask } from "@tauri-apps/plugin-dialog";
 import { generateSerializedGenericProjectStruct } from "./ProjectDataStructure";
 
 export type UUID = string;
@@ -82,8 +82,8 @@ namespace Project {
         const projectName = (await basename(filepath)).split('.')[0];
 
         await Promise.all([
-            createDir(resourcesPath), // Create Resources Directory
-            writeFile(filepath, generateSerializedGenericProjectStruct(projectName)) // Write Project Directory
+            mkdir(resourcesPath), // Create Resources Directory
+            writeTextFile(filepath, generateSerializedGenericProjectStruct(projectName)) // Write Project Directory
         ])
 
         return filepath;

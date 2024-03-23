@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-// import { convertFileSrc } from '@tauri-apps/api/tauri';
+// import { convertFileSrc } from '@tauri-apps/api/core';
 
 import './AudioVisualizer.css'
 import { AudioPlayer } from '../AudioPlayer/AudioPlayer';

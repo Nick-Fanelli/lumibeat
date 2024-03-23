@@ -1,4 +1,4 @@
-import { convertFileSrc } from '@tauri-apps/api/tauri';
+import { convertFileSrc } from '@tauri-apps/api/core';
 import { Howl } from 'howler' 
 
 let audioPlayers : AudioPlayer[] = [];

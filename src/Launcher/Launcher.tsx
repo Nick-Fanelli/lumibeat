@@ -2,12 +2,12 @@
 import '../index.css'
 import './Launcher.css'
 
-import { save, open } from "@tauri-apps/api/dialog";
+import { save, open } from "@tauri-apps/plugin-dialog";
 import { invoke } from "@tauri-apps/api";
 
 import { FaFolder, FaPlus, FaTrash } from "react-icons/fa";
 import Project from "../Project/Project";
-import { exists, readTextFile } from '@tauri-apps/api/fs';
+import { exists, readTextFile } from '@tauri-apps/plugin-fs';
 import { useEffect } from 'react';
 import { deserializeProjectStruct } from '../Project/ProjectDataStructure';
 import { Cache } from '../Cache';

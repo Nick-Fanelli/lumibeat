@@ -1,4 +1,4 @@
-import { exists, readTextFile, writeFile } from "@tauri-apps/api/fs";
+import { exists, readTextFile, writeFile } from "@tauri-apps/plugin-fs";
 import { appCacheDir, join } from "@tauri-apps/api/path";
 
 export namespace Cache {

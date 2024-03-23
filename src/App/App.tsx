@@ -10,7 +10,7 @@ import { invoke } from "@tauri-apps/api";
 import { useEffect } from "react";
 import { signal } from "@preact/signals-react";
 import ProjectStruct, { deserializeProjectStruct } from "../Project/ProjectDataStructure";
-import { readTextFile } from "@tauri-apps/api/fs";
+import { readTextFile } from "@tauri-apps/plugin-fs";
 import Project from "../Project/Project";
 import { v4 as uuidv4 } from 'uuid';
 
