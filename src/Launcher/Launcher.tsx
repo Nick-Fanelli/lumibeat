@@ -54,10 +54,11 @@ const Launcher = () => {
     }
 
     const removeRecentProject = (index: number) => {
+        
 
-        if(index != -1) {
-            recentProjects.value = recentProjects.value.filter((_, i) => i !== index);
-        }
+        // if(index != -1) {
+        //     recentProjects.value = recentProjects.value.filter((_, i) => i !== index);
+        // }
 
     }
 
