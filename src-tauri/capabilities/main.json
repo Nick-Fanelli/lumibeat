@@ -4,26 +4,38 @@
     "description": "Capability for the main window",
     "windows": ["launcher", "app-*"],
     "permissions": [
-      "path:default",
-      
-      "event:default",
-      
-      "window:default",
-      
-      "app:default",
-      
-      "resources:default",
-      
-      "menu:default",
-      
-      "tray:default",
-      
-      "window:allow-set-title",
-      
-      "dialog:allow-open",
-      "dialog:allow-save",
-
-      "fs:allow-read",
-      "fs:allow-exists"
-    ]
+        "path:default",
+        "event:default",
+        "window:default",
+        "app:default",
+        "resources:default",
+        "menu:default",
+        "tray:default",
+        "fs:allow-read-file",
+        "fs:allow-write-file",
+        "fs:allow-read-dir",
+        "fs:allow-copy-file",
+        "fs:allow-mkdir",
+        "fs:allow-remove",
+        "fs:allow-remove",
+        "fs:allow-rename",
+        "fs:allow-exists",
+        {
+          "identifier": "fs:scope",
+          "allow": [
+            "**"
+          ]
+        },
+        "shell:allow-open",
+        "dialog:allow-open",
+        "dialog:allow-save",
+        "dialog:allow-message",
+        "dialog:allow-ask",
+        "dialog:allow-confirm",
+        "app:allow-app-show",
+        "app:allow-app-hide",
+        "fs:default",
+        "dialog:default",
+        "shell:default"
+      ]
   }
