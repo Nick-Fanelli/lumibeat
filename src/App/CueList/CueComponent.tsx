@@ -4,7 +4,7 @@ import { useState } from "react";
 import DropTarget from "../DragDrop/DropTarget";
 import Draggable from "../DragDrop/Draggable";
 import HiddenInputComponent from "../HiddenInputComponent/HiddenInputComponent";
-import ContextMenuComponent from "./ContextMenu";
+import CueContextMenu from "../ContextMenu/CueContextMenu";
 import { useSignalValue } from "../Hooks/useSignalValue";
 
 type CueComponentProps = {
@@ -12,7 +12,7 @@ type CueComponentProps = {
     cues: Signal<Project.Cue[]>,
     cueSelection: Signal<string[]>,
 
-    moveCue: (sourceUUID: UUID, sourceIndex: number, destinationIndex: number) => void,
+    moveCue: (sourceIndex: number, destinationIndex: number) => void,
     reportOnCueClick: (event: React.MouseEvent, uuid: UUID) => void,
     deleteCue: (uuid: UUID) => void,
 
@@ -53,10 +53,9 @@ const CueComponent = ({ cues, cueSelection, moveCue, reportOnCueClick, deleteCue
 
         event.preventDefault();
 
-        const yDiff = 120;
-
         const { pageX, pageY } = event;
-        setContextMenu({ isVisible: true, x: pageX, y: pageY - yDiff });
+        cueSelection.value = [ cue.uuid ];
+        setContextMenu({ isVisible: true, x: pageX, y: pageY });
 
     }
 
@@ -66,7 +65,7 @@ const CueComponent = ({ cues, cueSelection, moveCue, reportOnCueClick, deleteCue
         <DropTarget key={`drop-target@${cue.uuid}`} acceptOnly={['cue']}
             onDrop={(dropID, dropData) => {
                 if(dropID === 'cue') {
-                    moveCue(dropData.uuid, dropData.index, index);
+                    moveCue(dropData.index, index);
                 }
             }}
 
@@ -154,37 +153,24 @@ const CueComponent = ({ cues, cueSelection, moveCue, reportOnCueClick, deleteCue
                             <td>{cue.name} {cue.number}</td>
                         </tr>,
 
-                        contextMenu.isVisible && <ContextMenuComponent
+                        contextMenu.isVisible && <CueContextMenu
 
                             x={contextMenu.x}
                             y={contextMenu.y}
 
+                            moveCueUp={() => {
+                                if(index > 0)
+                                    moveCue(index, index - 1)
+                            }}
+
+                            moveCueDown={() => {
+                                if(index < cues.value.length - 1)
+                                    moveCue(index, index + 1);
+                            }}
+
+                            deleteCue={() => deleteCue(cue.uuid)}
+                                
                             closeContextMenu={closeContextMenu}
-
-                            menuItems={[
-
-                                {
-                                    type: 'MenuItem', label: "Copy", onClick: () => {
-
-                                    }
-                                },
-
-                                {
-                                    type: 'MenuItem', label: "Paste After", onClick: () => {
-
-                                    }
-                                },
-
-                                {
-                                    type: "Separator"
-                                },
-
-                                { type: 'MenuItem', label: "Delete", onClick: () => {
-                                    deleteCue(cue.uuid);
-                                    closeContextMenu();
-                                }}
-
-                            ]}
 
                         />,
                         

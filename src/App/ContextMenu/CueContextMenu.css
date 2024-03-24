@@ -1,0 +1,136 @@
+.cue-context-menu {
+
+    --border-radius: 10px;
+
+    position: absolute;
+    z-index: 100;
+    -webkit-app-region: no-drag;
+
+    width: 250px;
+    height: 300px;
+
+    background-color: #333333;
+    border-radius: var(--border-radius);
+
+    box-shadow: #00000050 0px 0px 30px 4px;
+
+    display: grid;
+
+    grid-template-rows: 50px 4px 1fr;
+
+}
+
+.cue-context-menu > .quick-tray {
+
+    width: 100%;
+    height: 100%;
+
+    background-color: #2F2F2F;
+    border-radius: var(--border-radius) var(--border-radius) 0 0;
+
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+
+}
+
+.cue-context-menu > .quick-tray > .group {
+
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+
+    height: 100%;
+
+}
+
+.cue-context-menu > .quick-tray .quick-action {
+
+    padding: 0.5em;
+    border-radius: 10px;
+    transition-duration: 0.2s;
+
+}
+
+.cue-context-menu > .quick-tray .quick-action:hover { background-color: #222222; }
+.cue-context-menu > .quick-tray .quick-action:active { background-color: #1e1e1e; }
+
+.cue-context-menu > .quick-tray .quick-action > .icon {
+
+    font-size: 1.5rem;
+
+}
+
+.cue-context-menu > .divider {
+
+    width: 100%;
+    height: 100%;
+
+    background-color: #2d2d2d;
+
+}
+
+.cue-context-menu > .options {
+
+    width: 100%;
+    height: 100%;
+    list-style: none;
+
+    position: relative; 
+
+}
+
+.cue-context-menu > .options.blur > li {
+
+    filter: blur(3px);
+
+}
+
+.cue-context-menu > .options > li {
+
+    width: 100%;
+    display: flex;
+
+    justify-content: flex-start;
+    align-items: center;
+
+    height: 2.75em;
+
+    cursor: pointer;
+
+}
+
+.cue-context-menu > .options > li:hover { background-color: #232323; }
+.cue-context-menu > .options > li:active { background-color: #1e1e1e; }
+
+.cue-context-menu > .options > li > .icon {
+
+    font-size: 1.75rem;
+    width: 50px;
+
+}
+
+.cue-context-menu > .options > .popup-tooltip {
+
+    position: absolute;
+    top: 0;
+
+    pointer-events: none;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    width: 100%;
+    height: 100%;
+
+    background-color: #00000044;
+    opacity: 0%;
+
+    border-radius: 0 0 var(--border-radius) var(--border-radius);
+
+    font-size: 1.25rem;
+
+}
+
+.cue-context-menu > .options > .popup-tooltip.active { opacity: 100%; }

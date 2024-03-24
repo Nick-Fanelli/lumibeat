@@ -22,40 +22,20 @@ const reorderArray = (list: any[], sourceIndex: number, destinationIndex: number
 
 const CueList = ({cues}: CueListProps) => {
 
-    const moveCue = (sourceUUID: UUID, sourceIndex: number, destinatonIndex: number) => {
+    const moveCue = (sourceIndex: number, destinationIndex: number) => {
+
+        if(sourceIndex < 0 || sourceIndex >= cues.value.length || destinationIndex < 0 || destinationIndex >= cues.value.length) {
+            console.error("Invalid source index or destination index (out of bounds)");
+            return;
+        }
+
+        if(sourceIndex === destinationIndex)
+            return;
 
         let reorderedCues = [...cues.value];
 
-        if(selectedCues.value.length <= 1 || !selectedCues.value.includes(sourceUUID)) {
-
-            reorderedCues = reorderArray(reorderedCues, sourceIndex, destinatonIndex + (sourceIndex > destinatonIndex ? 1 : 0));
-
-        } else {
-
-            let targetCues: Project.Cue[] = [];
-            let firstSelectedDestinationIndex: number | null = null;
-
-            for(let i = 0; i < reorderedCues.length; i++) {
-                
-                const targetUUID = reorderedCues[i].uuid;
-                const selectionIndex = selectedCues.value.indexOf(targetUUID);
-
-                if(selectionIndex !== -1) {
-                    if(!firstSelectedDestinationIndex)
-                        firstSelectedDestinationIndex = i;
-
-                    targetCues.push(reorderedCues[i]);
-                    reorderedCues.splice(i, 1);
-                    i--;
-                }
-
-            }
-
-            if(firstSelectedDestinationIndex !== null) {
-                reorderedCues.splice(destinatonIndex + (firstSelectedDestinationIndex > destinatonIndex ? 1 : -1), 0, ...targetCues);
-            }
-
-        }
+        const [objectToMove] = reorderedCues.splice(sourceIndex, 1);
+        reorderedCues.splice(destinationIndex, 0, objectToMove);
 
         cues.value = reorderedCues;
 
