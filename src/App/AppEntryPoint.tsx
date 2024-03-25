@@ -5,6 +5,9 @@ import '../index.css'
 
 import { initializeAudioSystem } from "./AudioPlayer/AudioPlayer";
 import App from "./App";
+import EntryPointGlobalConfigurations from "../EntryPointGloablConfigurations";
+
+EntryPointGlobalConfigurations.runConfigurations();
 
 initializeAudioSystem();
 
