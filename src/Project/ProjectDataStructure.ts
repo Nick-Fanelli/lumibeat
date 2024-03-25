@@ -1,6 +1,9 @@
+import Project from "./Project";
+
 type ProjectStruct = {
 
-    name: string | undefined
+    name: string | undefined,
+    cueList: Project.Cue[]
 
 }
 
@@ -14,17 +17,24 @@ export const serializeProjectStruct = (projectStruct: ProjectStruct) : Serialize
 
 export const deserializeProjectStruct = (serializedProjectStruct: SerializedProjectStruct) : ProjectStruct => {
 
-    return JSON.parse(serializedProjectStruct) as ProjectStruct;
+    let project = JSON.parse(serializedProjectStruct) as ProjectStruct;
+
+    if(project.name == undefined)
+        project.name = "";
+
+    if(project.cueList == undefined)
+        project.cueList = [];
+
+    return project;
 
 }
 
-export const generateSerializedGenericProjectStruct = (projectName: string) : SerializedProjectStruct => {
+export const generateGenericProjectStruct = (projectName: string) : ProjectStruct => {
 
-    const genericProject: ProjectStruct = {
-        name: projectName
-    }
-
-    return serializeProjectStruct(genericProject);
+    return {
+        name: projectName,
+        cueList: []
+    };
 
 }
 
