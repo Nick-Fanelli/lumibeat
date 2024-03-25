@@ -5,58 +5,22 @@ import SplitPane from "./SplitPane/SplitPane";
 import './App.css'
 import Properties from "./Properties/Properties";
 import StatusBar from "./StatusBar/StatusBar";
-import { invoke } from "@tauri-apps/api";
 
-import { useEffect } from "react";
-import { signal } from "@preact/signals-react";
-import ProjectStruct, { deserializeProjectStruct } from "../Project/ProjectDataStructure";
-import { readTextFile } from "@tauri-apps/api/fs";
-import Project from "../Project/Project";
-import { v4 as uuidv4 } from 'uuid';
-
-interface WindowInfo {
-
-    window_uuid: string,
-    show_file_path: string
-
-}
-
-const windowInfo = signal<WindowInfo | null>(null);
-
-const currentProject = signal<ProjectStruct | null>(null);
-export const cues = signal<Project.Cue[]>([]);
-
-export const addCue = () => {
-
-    cues.value = [...cues.value, { uuid: uuidv4(), name: "Some Name" }];
-
-}
+import useAppWindowInfo from "./Hooks/useAppWindowInfo";
+import useLoadApp from "./Hooks/useLoadApp";
+import useAutoSave from "./Hooks/useAutoSave";
+import AppState from "./AppState";
+import useCatchAppClose from "./Hooks/useCatchAppClose";
 
 const App = () => {
 
-    useEffect(() => {
-        invoke<string>('get_app_window_info').then((res) => {
-            windowInfo.value = JSON.parse(res);
+    const appWindowInfo = useAppWindowInfo();
+    const [ isLoaded, showFilePath ] = useLoadApp(appWindowInfo, AppState.loadProjectIntoState);
 
-            const showFilePath = windowInfo.value?.show_file_path;
+    const onManualSaveCallback = useAutoSave(showFilePath);
+    useCatchAppClose(onManualSaveCallback);
 
-            if(showFilePath) {
-
-                readTextFile(showFilePath).then((res) => {
-                    currentProject.value = deserializeProjectStruct(res);
-
-                    invoke('set_window_title', {
-                        windowUuid: windowInfo.value?.window_uuid,
-                        title: currentProject.value.name
-                    })
-
-                });
-
-            }
-        });
-    }, [windowInfo])
-
-    if(windowInfo.value == null || currentProject.value == null) {
+    if(!isLoaded) {
         return <h1>Loading...</h1>
     }
 
@@ -68,7 +32,7 @@ const App = () => {
 
             <SplitPane>
                 
-                <CueList cues={cues} />
+                <CueList cues={AppState.cues} />
                 <Properties />
 
             </SplitPane>

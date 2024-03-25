@@ -4,6 +4,7 @@
 use std::collections::HashMap;
 use std::sync::Mutex;
 
+use tauri::window;
 use uuid::Uuid;
 
 struct State {
@@ -82,6 +83,19 @@ async fn open_app(handle: tauri::AppHandle, state: tauri::State<'_, State>, file
     .build()
     .expect("Error making app window");
 
+    let cloned_window = window.clone();
+
+    window.on_window_event(move |event| match event {
+
+        tauri::WindowEvent::CloseRequested { api, .. } => {
+            api.prevent_close();
+            let _ = cloned_window.emit("close-requested", "");
+        }
+
+        _ => {}
+
+    });
+
     let local_app_data = AppData {
 
         show_file_path: filepath
@@ -119,6 +133,11 @@ async fn set_window_title(state: tauri::State<'_, State>, window_uuid: String, t
 
 }
 
+#[tauri::command]
+async fn close_window(window: tauri::Window) -> Result<(), tauri::Error> { 
+    return window.close(); 
+}
+
 fn main() {
 
     let state = State {
@@ -133,7 +152,8 @@ fn main() {
         .invoke_handler(tauri::generate_handler![
             open_app,
             get_app_window_info,
-            set_window_title
+            set_window_title,
+            close_window
         ])
         .build(tauri::generate_context!())
         .expect("Error creating app context");

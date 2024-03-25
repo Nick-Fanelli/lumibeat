@@ -1,6 +1,6 @@
 import { FaPlus } from 'react-icons/fa';
 import './Header.css'
-import { addCue } from '../App';
+import AppState from '../AppState';
 
 const Header = () => {
 
@@ -9,7 +9,7 @@ const Header = () => {
             <div className="control-buttons">
                 <div>
                     <button className="btn" onClick={() => {
-                        addCue();
+                        AppState.addCue();
                     }}>
                         <FaPlus />
                     </button>

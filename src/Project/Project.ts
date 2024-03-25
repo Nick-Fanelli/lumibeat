@@ -1,7 +1,7 @@
 import { createDir, readDir, writeFile } from "@tauri-apps/api/fs";
 import { basename, dirname, join } from "@tauri-apps/api/path";
 import { ask } from "@tauri-apps/api/dialog";
-import { generateSerializedGenericProjectStruct } from "./ProjectDataStructure";
+import ProjectStruct, { generateGenericProjectStruct, serializeProjectStruct } from "./ProjectDataStructure";
 
 export type UUID = string;
 
@@ -46,6 +46,13 @@ namespace Project {
 
     }
 
+    export const saveShowFile = (showFilePath: string, projectStruct: ProjectStruct) : Promise<void> => {
+
+        // TODO: RUN VALIDATIONS CHECKS ON SHOW FILE OBJECT
+        return writeFile(showFilePath, serializeProjectStruct(projectStruct));
+
+    }
+
     export const initializeProjectDirectoryFromShowfile = async (filepath: string) : Promise<string | null>  => {
 
         // Ensure file ending
@@ -83,7 +90,7 @@ namespace Project {
 
         await Promise.all([
             createDir(resourcesPath), // Create Resources Directory
-            writeFile(filepath, generateSerializedGenericProjectStruct(projectName)) // Write Project Directory
+            saveShowFile(filepath, generateGenericProjectStruct(projectName))
         ])
 
         return filepath;

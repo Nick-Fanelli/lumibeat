@@ -11,15 +11,6 @@ type CueListProps = {
 
 }
 
-const reorderArray = (list: any[], sourceIndex: number, destinationIndex: number) : any[] => {
-    const result = Array.from(list);
-    const [ removed ] = result.splice(sourceIndex, 1);
-    result.splice(destinationIndex, 0, removed);
-
-    return result;
-}
-
-
 const CueList = ({cues}: CueListProps) => {
 
     const moveCue = (sourceIndex: number, destinationIndex: number) => {
