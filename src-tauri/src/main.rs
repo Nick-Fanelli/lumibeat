@@ -4,7 +4,6 @@
 use std::collections::HashMap;
 use std::sync::Mutex;
 
-use tauri::window;
 use uuid::Uuid;
 
 struct State {
