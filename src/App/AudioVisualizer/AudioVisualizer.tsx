@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 // import { convertFileSrc } from '@tauri-apps/api/tauri';
 
 import './AudioVisualizer.css'
@@ -12,7 +12,7 @@ type VisualizerProps = {
 
 }
 
-const formatTime = (seconds: number) => [seconds / 60, seconds % 60, (seconds % 1) * 1000].map((v) => `0${Math.floor(v)}`.slice(-2)).join(':');
+// const formatTime = (seconds: number) => [seconds / 60, seconds % 60, (seconds % 1) * 1000].map((v) => `0${Math.floor(v)}`.slice(-2)).join(':');
 
 const Visualizer = (props: VisualizerProps) => {
 
@@ -20,7 +20,7 @@ const Visualizer = (props: VisualizerProps) => {
 
     const [playhead, setPlayhead] = useState<number>(0);
 
-    const formattedDuration = useMemo(() => formatTime(props.audioPlayer.getDuration()), [props.audioPlayer]);
+    // const formattedDuration = useMemo(() => formatTime(props.audioPlayer.getDuration()), [props.audioPlayer]);
 
     const onVisualizerClick = useCallback((x: number) => {
 
