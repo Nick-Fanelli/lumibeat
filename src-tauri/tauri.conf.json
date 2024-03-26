@@ -6,8 +6,8 @@
     "distDir": "../dist"
   },
   "package": {
-    "productName": "lumibeat",
-    "version": "1.0.0-alpha"
+    "productName": "Lumibeat",
+    "version": "1.0.0-prerelease"
   },
   "tauri": {
     "allowlist": {

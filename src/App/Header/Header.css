@@ -4,36 +4,34 @@
     height: 50px;
     background-color: var(--secondary-background-color);
 
-}
-
-#header > div.control-buttons {
-
-    width: 100%;
-    height: 100%;
-
-    display: flex;
-    justify-content: space-evenly;
+    display: grid;
+    grid-template-columns: 33% 33% 33%;
     align-items: center;
-
-}
-
-#header > div.control-buttons > div {
-
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-    width: 100%;
 
     padding: 0 1em;
 
 }
 
-#header > div.control-buttons > div > .btn {
+#header > .projectName {
 
-    width: 30px;
-    height: 30px; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
 
-    background-color: var(--button-color);
+    text-align: center;
+
+}
+
+#header > .projectName input.hidden-input {
+
+    font-size: 1.5rem;
+    text-align: center;
+    font-weight: 700;
+
+}
+
+#header > .control-buttons > button {
+
     display: flex;
     justify-content: center;
     align-items: center;

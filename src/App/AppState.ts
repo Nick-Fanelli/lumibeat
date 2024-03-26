@@ -7,6 +7,7 @@ import ProjectStruct from "../Project/ProjectDataStructure";
 
 namespace AppState {
 
+    export const projectName = signal<string | undefined>(undefined);
     export const cues = signal<Project.Cue[]>([]);
 
     export const addCue = () => {
@@ -17,6 +18,7 @@ namespace AppState {
 
     export const loadProjectIntoState = (projectStruct: ProjectStruct) => {
 
+        projectName.value = projectStruct.name;
         cues.value = projectStruct.cueList;
 
     }

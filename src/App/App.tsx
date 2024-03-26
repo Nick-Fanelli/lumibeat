@@ -11,13 +11,20 @@ import useLoadApp from "./Hooks/useLoadApp";
 import useAutoSave from "./Hooks/useAutoSave";
 import AppState from "./AppState";
 import useCatchAppClose from "./Hooks/useCatchAppClose";
+import { invoke } from "@tauri-apps/api";
+
+const setWindowTitle = (windowTitle: string) => {
+    invoke('set_window_title', {
+        title: windowTitle
+    });
+}
 
 const App = () => {
 
     const appWindowInfo = useAppWindowInfo();
-    const [ isLoaded, showFilePath ] = useLoadApp(appWindowInfo, AppState.loadProjectIntoState);
+    const [ isLoaded, showFilePath ] = useLoadApp(appWindowInfo, AppState.loadProjectIntoState, setWindowTitle);
 
-    const onManualSaveCallback = useAutoSave(showFilePath);
+    const onManualSaveCallback = useAutoSave(showFilePath, setWindowTitle);
     useCatchAppClose(onManualSaveCallback);
 
     if(!isLoaded) {

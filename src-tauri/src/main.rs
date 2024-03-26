@@ -109,28 +109,7 @@ async fn open_app(handle: tauri::AppHandle, state: tauri::State<'_, State>, file
 }
 
 #[tauri::command]
-async fn set_window_title(state: tauri::State<'_, State>, window_uuid: String, title: String) -> Result<(), ()> {
-
-    let app_instances = state.app_instances.lock().unwrap();
-    let app = app_instances.get(&window_uuid);
-
-    match app {
-
-        Some(app) => {
-
-            let _ = app.set_title(title.as_str());
-            Ok(())
-
-        },
-
-        None => {
-            println!("Error: Could not find window with UUID of: {}", window_uuid);
-            Err(())
-        }
-
-    }
-
-}
+async fn set_window_title(window: tauri::Window, title: String) -> Result<(), tauri::Error> { return window.set_title(title.as_str()); }
 
 #[tauri::command]
 async fn close_window(window: tauri::Window) -> Result<(), tauri::Error> { 
