@@ -53,8 +53,6 @@ export namespace Cache {
             appCacheFilepath = await join(appCacheDirectory, "lumibeat-cache.json");
         }
 
-        console.log(appCacheFilepath);
-
         return appCacheFilepath;
 
     }

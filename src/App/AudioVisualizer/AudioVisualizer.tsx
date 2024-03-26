@@ -145,7 +145,6 @@ const AudioVisualizer = () => {
 
     }, [setAudioPlayer]);
 
-
     const addTriggerAtPlayhead = useCallback(() => {
 
         if(audioPlayer == null)

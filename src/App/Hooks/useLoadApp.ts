@@ -2,9 +2,8 @@ import { useEffect, useState } from "react";
 import ProjectStruct, { deserializeProjectStruct } from "../../Project/ProjectDataStructure";
 import { WindowInfo } from "./useAppWindowInfo";
 import { readTextFile } from "@tauri-apps/api/fs";
-import { invoke } from "@tauri-apps/api";
 
-const useLoadApp = (appWindowInfo: WindowInfo | undefined, loadProjectIntoState : (_: ProjectStruct) => void) : [ boolean, string | undefined ] => {
+const useLoadApp = (appWindowInfo: WindowInfo | undefined, loadProjectIntoState : (_: ProjectStruct) => void, setWindowTitle: (_: string) => void) : [ boolean, string | undefined ] => {
 
     const [value, setValue] = useState<[ boolean, string | undefined ]>([ false, undefined ]);
 
@@ -20,10 +19,7 @@ const useLoadApp = (appWindowInfo: WindowInfo | undefined, loadProjectIntoState 
                 loadProjectIntoState(projectStruct);
                 setValue([ true, showFilePath ]);
 
-                invoke('set_window_title', {
-                    windowUuid: appWindowInfo.window_uuid,
-                    title: projectStruct.name
-                });
+                setWindowTitle(projectStruct.name || "");
 
             })
 

@@ -36,7 +36,7 @@ const CueList = ({cues}: CueListProps) => {
 
         if(event.shiftKey) { // Shift Through Multi-Select
 
-        } else if(event.ctrlKey) { // TODO: MAKE WORK
+        } else if(event.ctrlKey) { // FIXME: MAKE WORK
 
         } else {
             selectedCues.value = [uuid];
