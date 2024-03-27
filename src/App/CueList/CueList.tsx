@@ -2,6 +2,7 @@ import './CueList.css'
 import Project, { UUID } from '../../Project/Project';
 import { Signal, signal } from '@preact/signals-react';
 import CueComponent from './CueComponent';
+import { Tooltip } from 'react-tooltip';
 
 const selectedCues = signal<UUID[]>([]);
 
@@ -59,6 +60,8 @@ const CueList = ({cues}: CueListProps) => {
 
     return (
         <section id="cue-list">
+
+            <Tooltip id="cue-uuid" />
 
             <table id="cue-table">
 
