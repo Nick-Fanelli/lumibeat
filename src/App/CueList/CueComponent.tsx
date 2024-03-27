@@ -127,7 +127,7 @@ const CueComponent = ({ cues, cueSelection, moveCue, reportOnCueClick, deleteCue
                             onContextMenu={ (event) => handleContextMenu(event) }
                         >
                             <td className="info" style={{ width: "100px" }}>
-                                <div className="machine-id"></div>
+                                <div className="machine-id" data-tooltip-id="cue-uuid" data-tooltip-content={cue.uuid}></div>
                                 <div className="machine-highlight"></div>
                             </td>
                             <td className="cue-number" style={{ width: "100px" }}>
