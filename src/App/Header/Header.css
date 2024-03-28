@@ -37,3 +37,19 @@
     align-items: center;
 
 }
+
+#header > .settings {
+
+    width: 100%;
+    height: 100%;
+
+    font-size: 1.5rem;
+
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+
+}
+
+#header > .settings > .icon:hover { color: var(--text-color-hover); }
+#header > .settings > .icon:active { color: var(--text-color-active); }

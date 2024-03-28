@@ -1,0 +1,82 @@
+.select-audio-file {
+
+    width: 100%;
+
+}
+
+.select-audio-file > .label {
+
+    font-size: 1.25rem;
+    margin: 0 0 0.25em 0.25em;
+
+}
+
+.select-audio-file > .selection-box {
+
+    width: 100%;
+    height: 2em;
+
+    border-radius: 8px;
+
+    background-color: var(--button-color);
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    padding: 0 0 0 1em;
+
+}
+
+.select-audio-file > .selection-box:hover {
+
+    background-color: var(--button-hover-color);
+
+}
+
+.select-audio-file > .selection-box:active {
+
+    background-color: var(--button-active-color);
+
+}
+
+.select-audio-file.invalid > .selection-box {
+
+    background-color: #674242;
+
+}
+
+.select-audio-file > .selection-box p {
+
+    pointer-events: none;
+
+}
+
+.select-audio-file.invalid > .selection-box p {
+
+    color: #ff2222;
+
+}
+
+.select-audio-file > .selection-box > .selection-btn {
+
+    width: 30px;
+    height: 100%;
+
+    background-color: var(--selected-color);
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    border-radius: 0 8px 8px 0;
+
+    cursor: pointer;
+
+}
+
+.select-audio-file.invalid > .selection-box > .selection-btn {
+
+    background-color: #ff2222;
+
+}

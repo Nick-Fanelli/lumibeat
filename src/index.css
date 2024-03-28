@@ -30,6 +30,8 @@
     --button-active-color: #545454;
 
     --text-color: #ced9e5;
+    --text-color-hover: #9aa2ab;
+    --text-color-active: #ffffff;
     --unfocused-text-color: #373d45;
 
     --skeleton-base-color: hsl(208, 60%, 16%);

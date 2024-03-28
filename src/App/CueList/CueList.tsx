@@ -1,18 +1,17 @@
 import './CueList.css'
 import Project, { UUID } from '../../Project/Project';
-import { Signal, signal } from '@preact/signals-react';
+import { Signal } from '@preact/signals-react';
 import CueComponent from './CueComponent';
 import { Tooltip } from 'react-tooltip';
-
-const selectedCues = signal<UUID[]>([]);
 
 type CueListProps = {
 
     cues: Signal<Project.Cue[]>
+    selectedCues: Signal<UUID[]>
 
 }
 
-const CueList = ({cues}: CueListProps) => {
+const CueList = ({ cues, selectedCues }: CueListProps) => {
 
     const moveCue = (sourceIndex: number, destinationIndex: number) => {
 

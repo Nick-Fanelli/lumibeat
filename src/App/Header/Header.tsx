@@ -2,6 +2,7 @@ import { FaPlus } from 'react-icons/fa';
 import './Header.css'
 import AppState from '../AppState';
 import HiddenInputComponent from '../HiddenInputComponent/HiddenInputComponent';
+import { FaGear } from 'react-icons/fa6';
 
 const Header = () => {
 
@@ -21,7 +22,9 @@ const Header = () => {
                 }} />
             </div>
             
-            <div></div>
+            <div className='settings'>
+                <FaGear className='icon' />
+            </div>
 
         </section>
     )

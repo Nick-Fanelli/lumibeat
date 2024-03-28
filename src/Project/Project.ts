@@ -12,11 +12,16 @@ namespace Project {
         uuid: UUID
         name?: string
         number?: number
+        audioFile?: string
     
     }
 
     export const getIndexByUUID = (cues: ReadonlyArray<Cue>, uuid: UUID): number => {
         return cues.findIndex(cue => cue.uuid === uuid);
+    }
+
+    export const getCueByUUID = (cues: ReadonlyArray<Cue>, uuid: UUID) : Cue | undefined => {
+        return cues.find(cue => cue.uuid === uuid);
     }
 
     export const getIndexByUUIDCallback = (cues: ReadonlyArray<Cue>, uuid: UUID, callback: (index: number) => Cue[]) : Cue[] => {

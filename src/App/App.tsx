@@ -12,12 +12,16 @@ import useAutoSave from "./Hooks/useAutoSave";
 import AppState from "./AppState";
 import useCatchAppClose from "./Hooks/useCatchAppClose";
 import { invoke } from "@tauri-apps/api";
+import { signal } from "@preact/signals-react";
+import { UUID } from "../Project/Project";
 
 const setWindowTitle = (windowTitle: string) => {
     invoke('set_window_title', {
         title: windowTitle
     });
 }
+
+const selectedCues = signal<UUID[]>([]);
 
 const App = () => {
 
@@ -39,8 +43,8 @@ const App = () => {
 
             <SplitPane>
                 
-                <CueList cues={AppState.cues} />
-                <Properties />
+                <CueList cues={AppState.cues} selectedCues={selectedCues} />
+                <Properties selectedCues={selectedCues} />
 
             </SplitPane>
 
