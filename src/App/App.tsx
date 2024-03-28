@@ -9,11 +9,12 @@ import StatusBar from "./StatusBar/StatusBar";
 import useAppWindowInfo from "./Hooks/useAppWindowInfo";
 import useLoadApp from "./Hooks/useLoadApp";
 import useAutoSave from "./Hooks/useAutoSave";
-import AppState from "./AppState";
 import useCatchAppClose from "./Hooks/useCatchAppClose";
 import { invoke } from "@tauri-apps/api";
-import { signal } from "@preact/signals-react";
-import { UUID } from "../Project/Project";
+import ProjectStruct from "../Project/ProjectDataStructure";
+import { useDispatch } from "react-redux";
+import { setProjectName } from "./State/Project/projectNameSlice";
+import { setCueList } from "./State/Project/cueListSlice";
 
 const setWindowTitle = (windowTitle: string) => {
     invoke('set_window_title', {
@@ -21,12 +22,19 @@ const setWindowTitle = (windowTitle: string) => {
     });
 }
 
-const selectedCues = signal<UUID[]>([]);
-
 const App = () => {
 
+    const dispatch = useDispatch();
+
+    const loadProjectIntoState = (projectStruct: ProjectStruct) => {
+        
+        dispatch(setProjectName(projectStruct.name || ""));
+        dispatch(setCueList(projectStruct.cueList));
+
+    }
+
     const appWindowInfo = useAppWindowInfo();
-    const [ isLoaded, showFilePath ] = useLoadApp(appWindowInfo, AppState.loadProjectIntoState, setWindowTitle);
+    const [ isLoaded, showFilePath ] = useLoadApp(appWindowInfo, loadProjectIntoState, setWindowTitle);
 
     const onManualSaveCallback = useAutoSave(showFilePath, setWindowTitle);
     useCatchAppClose(onManualSaveCallback);
@@ -43,8 +51,8 @@ const App = () => {
 
             <SplitPane>
                 
-                <CueList cues={AppState.cues} selectedCues={selectedCues} />
-                <Properties selectedCues={selectedCues} />
+                <CueList />
+                <Properties />
 
             </SplitPane>
 

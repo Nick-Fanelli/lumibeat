@@ -1,15 +1,15 @@
-import { Signal } from "@preact/signals-react"
 import Project, { UUID } from "../../Project/Project";
 import { useState } from "react";
 import DropTarget from "../DragDrop/DropTarget";
 import Draggable from "../DragDrop/Draggable";
 import HiddenInputComponent from "../HiddenInputComponent/HiddenInputComponent";
 import CueContextMenu from "../ContextMenu/CueContextMenu";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../State/AppStore";
+import { setCueList } from "../State/Project/cueListSlice";
+import { setSelectedCues } from "../State/App/selectedCuesSlice";
 
 type CueComponentProps = {
-
-    cues: Signal<Project.Cue[]>,
-    cueSelection: Signal<string[]>,
 
     moveCue: (sourceIndex: number, destinationIndex: number) => void,
     reportOnCueClick: (event: React.MouseEvent, uuid: UUID) => void,
@@ -29,18 +29,23 @@ type ContextMenuData = {
 
 }
 
-const CueComponent = ({ cues, cueSelection, moveCue, reportOnCueClick, deleteCue, cue, index }: CueComponentProps) => {
+const CueComponent = ({ moveCue, reportOnCueClick, deleteCue, cue, index }: CueComponentProps) => {
+
+    const dispatch = useDispatch();
+    
+    const selectedCues = useSelector((state: RootState) => state.selectedCues.value);
+    const cueList = useSelector((state: RootState) => state.cueList.value);
 
     const [ contextMenu, setContextMenu ] = useState<ContextMenuData>({ isVisible: false, x: 0, y: 0 });
 
     const updateCueByUUID = (uuid: UUID, cueCallback: (cue: Project.Cue) => Project.Cue) => {
 
-        const targetCueIndex = cues.value.findIndex((cue) => cue.uuid === uuid);
+        const targetCueIndex = cueList.findIndex((cue) => cue.uuid === uuid);
 
         if(targetCueIndex != -1) {
-            const updatedCues = [...cues.value];
-            updatedCues[targetCueIndex] = cueCallback(cues.value[targetCueIndex]);
-            cues.value = updatedCues;
+            const updatedCues = [...cueList];
+            updatedCues[targetCueIndex] = cueCallback(cueList[targetCueIndex]);
+            dispatch(setCueList(updatedCues));
         }
 
     } 
@@ -50,7 +55,7 @@ const CueComponent = ({ cues, cueSelection, moveCue, reportOnCueClick, deleteCue
         event.preventDefault();
 
         const { pageX, pageY } = event;
-        cueSelection.value = [ cue.uuid ];
+        dispatch(setSelectedCues([ cue.uuid ]));
         setContextMenu({ isVisible: true, x: pageX, y: pageY });
 
     }
@@ -115,7 +120,7 @@ const CueComponent = ({ cues, cueSelection, moveCue, reportOnCueClick, deleteCue
                     {(provided, snapshot) => ([
                         <tr
                             key={`cue-elem@${cue.uuid}`}
-                            className={`${cueSelection.value.includes(cue.uuid) ? 'selected' : ''} ${index % 2 !== 0 ? 'odd' : ''} ${snapshot.isBeingDragged ? 'beingDragged' : ''}`}
+                            className={`${selectedCues.includes(cue.uuid) ? 'selected' : ''} ${index % 2 !== 0 ? 'odd' : ''} ${snapshot.isBeingDragged ? 'beingDragged' : ''}`}
                             onClick={(event) => { reportOnCueClick(event, cue.uuid) }}
                             {...provided}
                             {...dropTargetProvided}
@@ -160,7 +165,7 @@ const CueComponent = ({ cues, cueSelection, moveCue, reportOnCueClick, deleteCue
                             }}
 
                             moveCueDown={() => {
-                                if(index < cues.value.length - 1)
+                                if(index < cueList.length - 1)
                                     moveCue(index, index + 1);
                             }}
 
