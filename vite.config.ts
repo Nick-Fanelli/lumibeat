@@ -4,11 +4,7 @@ import { resolve } from "@tauri-apps/api/path";
 
 // https://vitejs.dev/config/
 export default defineConfig(async () => ({
-  plugins: [react({
-    babel: {
-      plugins: [["module:@preact/signals-react-transform"]]
-    }
-  })],
+  plugins: [react({})],
 
   // Vite options tailored for Tauri development and only applied in `tauri dev` or `tauri build`
   //
