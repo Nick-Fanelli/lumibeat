@@ -25,7 +25,7 @@ const useLoadApp = (appWindowInfo: WindowInfo | undefined, loadProjectIntoState 
 
         }
 
-    }, [appWindowInfo, setValue, loadProjectIntoState]);
+    }, [appWindowInfo, setValue]);
 
     return value;
 

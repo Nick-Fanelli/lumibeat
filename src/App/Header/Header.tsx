@@ -1,24 +1,32 @@
 import { FaPlus } from 'react-icons/fa';
 import './Header.css'
-import AppState from '../AppState';
 import HiddenInputComponent from '../HiddenInputComponent/HiddenInputComponent';
 import { FaGear } from 'react-icons/fa6';
+import { useDispatch } from 'react-redux';
+import { addCue } from '../State/Project/cueListSlice';
+import { useSelector } from 'react-redux';
+import { RootState } from '../State/AppStore';
+import { setProjectName } from '../State/Project/projectNameSlice';
 
 const Header = () => {
+
+    const projectName = useSelector((state: RootState) => state.projectName.value);
+
+    const dispatch = useDispatch();
 
     return (
         <section id="header">
             <div className="control-buttons">
                 <button className="btn" onClick={() => {
-                    AppState.addCue();
+                    dispatch(addCue());
                 }}>
                     <FaPlus />
                 </button>
             </div>
 
             <div className='projectName'>
-                <HiddenInputComponent value={AppState.projectName.value} setValue={(newValue: string) => {
-                    AppState.projectName.value = newValue
+                <HiddenInputComponent value={projectName} setValue={(newValue: string) => {
+                    dispatch(setProjectName(newValue));
                 }} />
             </div>
             

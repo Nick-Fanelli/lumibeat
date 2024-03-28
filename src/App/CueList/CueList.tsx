@@ -1,21 +1,22 @@
 import './CueList.css'
 import Project, { UUID } from '../../Project/Project';
-import { Signal } from '@preact/signals-react';
 import CueComponent from './CueComponent';
 import { Tooltip } from 'react-tooltip';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '../State/AppStore';
+import { setSelectedCues } from '../State/App/selectedCuesSlice';
+import { setCueList } from '../State/Project/cueListSlice';
 
-type CueListProps = {
+const CueList = () => {
 
-    cues: Signal<Project.Cue[]>
-    selectedCues: Signal<UUID[]>
-
-}
-
-const CueList = ({ cues, selectedCues }: CueListProps) => {
+    const dispatch = useDispatch();
+    
+    const selectedCues = useSelector((state: RootState) => state.selectedCues.value);
+    const cueList = useSelector((state: RootState) => state.cueList.value);
 
     const moveCue = (sourceIndex: number, destinationIndex: number) => {
 
-        if(sourceIndex < 0 || sourceIndex >= cues.value.length || destinationIndex < 0 || destinationIndex >= cues.value.length) {
+        if(sourceIndex < 0 || sourceIndex >= cueList.length || destinationIndex < 0 || destinationIndex >= cueList.length) {
             console.error("Invalid source index or destination index (out of bounds)");
             return;
         }
@@ -23,12 +24,12 @@ const CueList = ({ cues, selectedCues }: CueListProps) => {
         if(sourceIndex === destinationIndex)
             return;
 
-        let reorderedCues = [...cues.value];
+        let reorderedCues = [...cueList];
 
         const [objectToMove] = reorderedCues.splice(sourceIndex, 1);
         reorderedCues.splice(destinationIndex, 0, objectToMove);
 
-        cues.value = reorderedCues;
+        dispatch(setCueList(reorderedCues));
 
     }
 
@@ -39,21 +40,21 @@ const CueList = ({ cues, selectedCues }: CueListProps) => {
         } else if(event.ctrlKey) { // FIXME: MAKE WORK
 
         } else {
-            selectedCues.value = [uuid];
+            dispatch(setSelectedCues([uuid]));
         }
 
     }
 
     const deleteCue = (cue: UUID) => {
 
-        const selectionIndex = selectedCues.value.indexOf(cue);
+        const selectionIndex = selectedCues.indexOf(cue);
 
         if(selectionIndex !== -1) {
-            selectedCues.value = selectedCues.value.splice(selectionIndex, 1);
+            dispatch(setSelectedCues(selectedCues.splice(selectionIndex, 1)));
         }
 
-        const updatedCues = Project.removeCueFromListByUUID(cues.value, cue);
-        cues.value = updatedCues;
+        const updatedCues = Project.removeCueFromListByUUID(cueList, cue);
+        dispatch(setCueList(updatedCues));
 
     }
 
@@ -74,8 +75,8 @@ const CueList = ({ cues, selectedCues }: CueListProps) => {
                 </thead>
                 <tbody>
                     {
-                        cues.value.map((cue, index) => (
-                            <CueComponent key={index} index={index} cues={cues} cue={cue} moveCue={moveCue} reportOnCueClick={reportOnCueClick} cueSelection={selectedCues} deleteCue={deleteCue} />
+                        cueList.map((cue, index) => (
+                            <CueComponent key={index} index={index} cue={cue} moveCue={moveCue} reportOnCueClick={reportOnCueClick} deleteCue={deleteCue} />
                         ))
                     }
                 </tbody>

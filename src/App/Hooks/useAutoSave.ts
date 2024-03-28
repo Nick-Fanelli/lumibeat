@@ -1,7 +1,7 @@
 import { useEffect } from "react"
 import ProjectStruct, { generateGenericProjectStruct } from "../../Project/ProjectDataStructure";
 import Project from "../../Project/Project";
-import AppState from "../AppState";
+import { appStore } from "../State/AppStore";
 
 let projectCache: ProjectStruct = generateGenericProjectStruct("");
 
@@ -9,16 +9,18 @@ const onAutoSave = (showFilePath: string, setWindowTitle: (_: string) => void) :
 
     let isModified = false;
 
-    const cuesSnapshot = AppState.cues.value;
+    const storeState = appStore.getState();
+
+    const cueListSnapshot = storeState.cueList.value;
     
     // Compare Snapshots
-    if(cuesSnapshot !== projectCache.cueList) {
-        projectCache.cueList = cuesSnapshot;
+    if(cueListSnapshot !== projectCache.cueList) {
+        projectCache.cueList = cueListSnapshot;
         isModified = true;
     }
 
-    if(AppState.projectName.value !== projectCache.name) {
-        projectCache.name = AppState.projectName.value;
+    if(storeState.projectName.value !== projectCache.name) {
+        projectCache.name = storeState.projectName.value;
         setWindowTitle(projectCache.name || "");
         isModified = true;
     }
