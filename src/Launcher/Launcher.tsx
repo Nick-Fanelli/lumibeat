@@ -11,12 +11,17 @@ import { exists, readTextFile } from '@tauri-apps/api/fs';
 import { useEffect } from 'react';
 import { deserializeProjectStruct } from '../Project/ProjectDataStructure';
 import { Cache } from '../Cache';
-import { signal } from '@preact/signals-react';
 import { useAppVersion } from './CustomHooks/useAppVersion';
-
-const recentProjects = signal<Cache.RecentProject[]>([]);
+import { Provider } from 'react-redux';
+import { RootState, launcherStore } from './State/LauncherStore';
+import { useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
+import { setRecentProjects } from './State/recentProjectsSlice';
 
 const Launcher = () => {
+
+    const recentProjects = useSelector((state: RootState) => state.recentProjects.value);
+    const dispatch = useDispatch();
 
     const appVersion = useAppVersion();
 
@@ -26,7 +31,7 @@ const Launcher = () => {
         const loadCache = async () => {
 
             const cache = await Cache.loadCache();
-            recentProjects.value = cache.recentProjects;
+            dispatch(setRecentProjects(cache.recentProjects));
 
         }
 
@@ -38,7 +43,7 @@ const Launcher = () => {
             
         let shouldAppend = true;
 
-        recentProjects.value.forEach((project) => {
+        recentProjects.forEach((project) => {
             if(project.showfilePath === recentProject.showfilePath) {
                 shouldAppend = false;
                 return;
@@ -46,9 +51,9 @@ const Launcher = () => {
         })
 
         if(shouldAppend) {
-            recentProjects.value = [recentProject, ...recentProjects.value];
+            dispatch(setRecentProjects([recentProject, ...recentProjects]))
         } else {
-            recentProjects.value = [...recentProjects.value];
+            dispatch(setRecentProjects([...recentProjects]));
         }
 
     }
@@ -56,7 +61,7 @@ const Launcher = () => {
     const removeRecentProject = (index: number) => {
 
         if(index != -1) {
-            recentProjects.value = recentProjects.value.filter((_, i) => i !== index);
+            dispatch(setRecentProjects(recentProjects.filter((_, i) => i !== index)));
         }
 
     }
@@ -178,7 +183,7 @@ const Launcher = () => {
                     <div className="projects">
 
                         {
-                            recentProjects.value.map((recentProject, index) => (
+                            recentProjects.map((recentProject, index) => (
                                 <div className="project" key={index} onClick={() => {
                                     // TODO: ENSURE EXISTS AND IF NOT REMOVE FROM LIST
 
@@ -187,7 +192,7 @@ const Launcher = () => {
                                     <h1>{recentProject.projectName}</h1>
                                     <p>{recentProject.showfilePath}</p>
                                     <FaTrash className="x" onClick={() => {
-                                        removeRecentProject(recentProjects.value.indexOf(recentProject, 0))
+                                        removeRecentProject(recentProjects.indexOf(recentProject, 0))
                                     }}></FaTrash>
                                 </div>
                             ))
