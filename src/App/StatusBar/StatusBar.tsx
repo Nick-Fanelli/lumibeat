@@ -5,7 +5,7 @@ const StatusBar = () => {
     return (
         <section id="status-bar">
             
-            <h1>Status Bar</h1>
+            <h1>Duration Here</h1>
 
         </section>
     )

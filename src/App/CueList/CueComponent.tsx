@@ -5,7 +5,6 @@ import DropTarget from "../DragDrop/DropTarget";
 import Draggable from "../DragDrop/Draggable";
 import HiddenInputComponent from "../HiddenInputComponent/HiddenInputComponent";
 import CueContextMenu from "../ContextMenu/CueContextMenu";
-import { useSignalValue } from "../Hooks/useSignalValue";
 
 type CueComponentProps = {
 
@@ -31,9 +30,6 @@ type ContextMenuData = {
 }
 
 const CueComponent = ({ cues, cueSelection, moveCue, reportOnCueClick, deleteCue, cue, index }: CueComponentProps) => {
-
-    useSignalValue(cueSelection);
-    useSignalValue(cues);
 
     const [ contextMenu, setContextMenu ] = useState<ContextMenuData>({ isVisible: false, x: 0, y: 0 });
 
