@@ -25,11 +25,35 @@ export const cueListSlice = createSlice({
 
         addCue: (state) => {
             state.value = [...state.value, { uuid: uuidv4(), name: "" } ];
+        },
+
+        redefineCue: (state, action: PayloadAction<Project.Cue>) => {
+            
+            const lookupCue = Project.getCueByUUID(state.value, action.payload.uuid);
+
+            if(lookupCue !== action.payload) {
+                
+                const cueIndex = Project.getIndexByUUID(state.value, action.payload.uuid);
+
+                if(cueIndex !== -1) {
+                   state.value = [
+                        ...state.value.slice(0, cueIndex),
+                        action.payload,
+                        ...state.value.slice(cueIndex + 1)
+                    ];
+
+                    return;
+                }
+
+            }
+
+            console.error("Error with redefine cue reducer");
+
         }
 
     }
 });
 
-export const { setCueList, addCue } = cueListSlice.actions;
+export const { setCueList, addCue, redefineCue } = cueListSlice.actions;
 
 export default cueListSlice.reducer;

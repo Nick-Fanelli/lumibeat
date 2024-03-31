@@ -1,11 +1,17 @@
+import { useSelector } from 'react-redux';
 import './Properties.css'
+import { RootState } from '../State/AppStore';
+import usePropertiesCue from './usePropertiesCue';
 
 // const formatTime = (seconds: number) => [seconds / 60, seconds % 60, (seconds % 1) * 1000].map((v) => `0${Math.floor(v)}`.slice(-2)).join(':');
 
 const Properties = () => {
 
-    // if(props.selectedCue == undefined)
-    //     return null;
+    const selectedCues = useSelector((state: RootState) => state.selectedCues.value);
+    const [ cue, setCue ] = usePropertiesCue(selectedCues);
+
+    if(cue == undefined)
+        return null;
 
     // const [audioPlayer, setAudioPlayer] = useState<AudioPlayer | null>(null);
     // const [triggers, setTriggers] = useState<Trigger[]>([]);
@@ -42,42 +48,33 @@ const Properties = () => {
 
     // }, [audioPlayer]);
 
-    return null;
+    return (
 
-    // return (
+        <section id="audio-visualizer">
 
-    //     <section id="audio-visualizer">
+            <button onClick={() => {
+                let newCue = { ...cue, name: "Hello World" };
+                setCue(newCue);
+            }}>
+                RENAME CUE
+            </button>
 
-    //         <button onClick={() => {
-    //             if(cue.value == undefined)
-    //                 return;
+            {cue.name}
 
-    //             let anotherCue = cue.value;
-    //             anotherCue.name = "HEY";
-    //             cue.value = anotherCue;
-                
-    //         }}>
-    //             RENAME CUE
-    //         </button>
-
-    //         {cue.value.name}
-
-    //         {/* <h1>{cue?.name}</h1> */}
-
-    //         {
-    //             <>
-    //                 {/* <CueProperties cue={cue} /> */}
-    //             </>
-    //         }
+            {
+                <>
+                    {/* <CueProperties cue={cue} /> */}
+                </>
+            }
 
 
-    //         {
-    //             // audioPlayer == null || <Visualizer audioPlayer={audioPlayer} triggers={triggers} playhead={playhead} />
-    //         }
+            {
+                // audioPlayer == null || <Visualizer audioPlayer={audioPlayer} triggers={triggers} playhead={playhead} />
+            }
 
-    //     </section>
+        </section>
 
-    // );
+    );
 };
 
 export default Properties;
