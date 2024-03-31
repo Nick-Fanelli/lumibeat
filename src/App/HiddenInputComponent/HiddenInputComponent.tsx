@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useCallback, useRef } from 'react'
+import React, { ChangeEvent, useCallback, useEffect, useRef } from 'react'
 
 import './HiddenInputComponent.css'
 
@@ -36,6 +36,15 @@ const HiddenInputComponent = (props: HandleInputComponentProps) => {
         }
 
     }, [ref.current]);
+
+    // Handle External Change of Value
+    useEffect(() => {
+
+        if(ref.current) {
+            ref.current.value = props.value;
+        }
+
+    }, [props.value]);
 
     return (
         <input ref={ref} className={`hidden-input ${props.className}`} type={props.type || "text"} defaultValue={props.value} 
