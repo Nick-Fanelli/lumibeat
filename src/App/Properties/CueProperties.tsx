@@ -1,4 +1,4 @@
-import { signal } from "@preact/signals-react";
+import { useState } from "react";
 import Project from "../../Project/Project";
 import SelectAudioFile from "./SelectAudioFile";
 
@@ -15,9 +15,9 @@ enum ActiveVisualizerTab {
 
 }
 
-const activeVisualizerTab = signal<ActiveVisualizerTab>(ActiveVisualizerTab.AUDIO);
-
 const CueProperties = (props: Props) => {
+
+    const [activeVisualizerTab, setActiveVisualizerTab] = useState<ActiveVisualizerTab>(ActiveVisualizerTab.AUDIO);
 
     return (
         <div className="controls">
@@ -25,15 +25,15 @@ const CueProperties = (props: Props) => {
             <div className="tab-bar">
 
                 <div 
-                    className={`tab ${activeVisualizerTab.value == ActiveVisualizerTab.AUDIO ? 'selected' : ''}`}
-                    onClick={() => { activeVisualizerTab.value = ActiveVisualizerTab.AUDIO; }}
+                    className={`tab ${activeVisualizerTab == ActiveVisualizerTab.AUDIO ? 'selected' : ''}`}
+                    onClick={() => { setActiveVisualizerTab(ActiveVisualizerTab.AUDIO); }}
                 >
                     <h1>Audio</h1>
                 </div>
 
                 <div 
-                    className={`tab ${activeVisualizerTab.value == ActiveVisualizerTab.TIMING ? 'selected' : ''}`}
-                    onClick={() => { activeVisualizerTab.value = ActiveVisualizerTab.TIMING; }}
+                    className={`tab ${activeVisualizerTab == ActiveVisualizerTab.TIMING ? 'selected' : ''}`}
+                    onClick={() => { setActiveVisualizerTab(ActiveVisualizerTab.TIMING); }}
                 >
                     <h1>Timing</h1>
                 </div>
@@ -42,13 +42,13 @@ const CueProperties = (props: Props) => {
 
             <div className="content">
                 
-                <div className={`audio ${activeVisualizerTab.value != ActiveVisualizerTab.AUDIO ? 'hidden' : ''}`}>
+                <div className={`audio ${activeVisualizerTab != ActiveVisualizerTab.AUDIO ? 'hidden' : ''}`}>
 
                     <SelectAudioFile cue={props.cue} />
 
                 </div>
 
-                <div className={`timing ${activeVisualizerTab.value != ActiveVisualizerTab.TIMING ? 'hidden' : ''}`}>
+                <div className={`timing ${activeVisualizerTab != ActiveVisualizerTab.TIMING ? 'hidden' : ''}`}>
                     
                     <h1>TO BE IMPLEMENTED (TIMING)</h1>
 
