@@ -37,7 +37,7 @@ const App = () => {
     const [ isLoaded, showFilePath ] = useLoadApp(appWindowInfo, loadProjectIntoState, setWindowTitle);
 
     const onManualSaveCallback = useAutoSave(showFilePath, setWindowTitle);
-    useCatchAppClose(onManualSaveCallback);
+    useCatchAppClose(appWindowInfo, onManualSaveCallback);
 
     if(!isLoaded) {
         return <h1>Loading...</h1>

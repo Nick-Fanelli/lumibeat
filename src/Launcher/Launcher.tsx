@@ -16,6 +16,28 @@ import { RootState } from './State/LauncherStore';
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 import { setRecentProjects } from './State/recentProjectsSlice';
+import { listen } from '@tauri-apps/api/event';
+
+const useDetectShouldClose = () => {
+
+    useEffect(() => {
+
+        const closeRequestedListener = listen('close-requested', (e) => {
+
+            const windowUUID = e.payload;
+
+            if(windowUUID === "*")
+                invoke('close_window');
+
+        });
+
+        return () => {
+            closeRequestedListener.then((res) => { res(); });
+        }
+
+    }, []);
+
+}
 
 const Launcher = () => {
 
@@ -23,6 +45,8 @@ const Launcher = () => {
     const dispatch = useDispatch();
 
     const appVersion = useAppVersion();
+
+    useDetectShouldClose();
 
     // Load Cache
     useEffect(() => {

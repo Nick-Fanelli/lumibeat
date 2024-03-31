@@ -10,6 +10,8 @@ type Props = {
 
 const SelectAudioFile = (props: Props) => {
 
+    props;
+
     return (
         <div className='select-audio-file'>
             <h1 className='label'>Audio File Resource Path</h1>

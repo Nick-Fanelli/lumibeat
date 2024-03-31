@@ -1,13 +1,12 @@
 import { useCallback, useEffect, useRef } from "react";
 import { AudioPlayer } from "../AudioPlayer/AudioPlayer";
 import Trigger from "./Trigger";
-import { Signal } from "@preact/signals-react";
 
 type VisualizerProps = {
 
     audioPlayer: AudioPlayer,
     triggers: Trigger[],
-    playhead: Signal<number>
+    playhead: number // used to be Signal<number> removed for build but no longer reactive
 
 }
 
@@ -30,7 +29,7 @@ const Visualizer = (props: VisualizerProps) => {
     useEffect(() => {
 
         const playbackRefreshInterval = setInterval(() => {
-            props.playhead.value = props.audioPlayer.getCurrentTime();
+            props.playhead = props.audioPlayer.getCurrentTime();
         }, 10);
 
         const handleMouseUp = (e: MouseEvent) => {
@@ -97,7 +96,7 @@ const Visualizer = (props: VisualizerProps) => {
                     }
 
                     <div className="playhead" style={{
-                        left: `${(props.playhead.value / props.audioPlayer.getDuration()) * 100}%`
+                        left: `${(props.playhead / props.audioPlayer.getDuration()) * 100}%`
                     }}></div>
 
                 </div>

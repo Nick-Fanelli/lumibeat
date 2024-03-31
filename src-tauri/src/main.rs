@@ -1,9 +1,12 @@
 // Prevents additional console window on Windows in release, DO NOT REMOVE!!
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
+mod menubar;
+
 use std::collections::HashMap;
 use std::sync::Mutex;
 
+use menubar::generate_menu_bar;
 use uuid::Uuid;
 
 struct State {
@@ -79,6 +82,7 @@ async fn open_app(handle: tauri::AppHandle, state: tauri::State<'_, State>, file
         .title(&window_uuid)
         .inner_size(900.0, 700.0)
         .min_inner_size(900.0, 550.0)
+        .theme(Some(tauri::Theme::Dark))
     .build()
     .expect("Error making app window");
 
@@ -88,7 +92,7 @@ async fn open_app(handle: tauri::AppHandle, state: tauri::State<'_, State>, file
 
         tauri::WindowEvent::CloseRequested { api, .. } => {
             api.prevent_close();
-            let _ = cloned_window.emit("close-requested", "");
+            let _ = cloned_window.emit("close-requested", cloned_window.label());
         }
 
         _ => {}
@@ -112,8 +116,17 @@ async fn open_app(handle: tauri::AppHandle, state: tauri::State<'_, State>, file
 async fn set_window_title(window: tauri::Window, title: String) -> Result<(), tauri::Error> { return window.set_title(title.as_str()); }
 
 #[tauri::command]
-async fn close_window(window: tauri::Window) -> Result<(), tauri::Error> { 
-    return window.close(); 
+async fn close_window(window: tauri::Window, state: tauri::State<'_, State>) -> Result<(), ()> { 
+
+    // Close Window
+    let _ = window.close();
+
+    // Remove Window from App Instances
+    let mut app_instances = state.app_instances.lock().unwrap();
+    app_instances.remove(window.label());
+
+    Ok(())
+
 }
 
 fn main() {
@@ -125,16 +138,27 @@ fn main() {
 
     };
 
+    let menu = generate_menu_bar();
+
     let app = tauri::Builder::default()
         .manage(state)
+        .menu(menu)
         .invoke_handler(tauri::generate_handler![
             open_app,
             get_app_window_info,
             set_window_title,
             close_window
         ])
-        .build(tauri::generate_context!())
-        .expect("Error creating app context");
+        .on_menu_event(|event| {
+            match event.menu_item_id() {
+                "quit" => {
+                    let _ = event.window().emit("close-requested", "*");
+                }
+                _ => {}
+            }
+        })
+    .build(tauri::generate_context!())
+    .expect("Error creating app context");
 
     tauri::WindowBuilder::new(
         &app,
@@ -145,6 +169,7 @@ fn main() {
         .inner_size(900.0, 700.0)
         .resizable(false)
         .fullscreen(false)
+        .theme(Some(tauri::Theme::Dark))
     .build()
     .expect("Failed to build launcher");
 
