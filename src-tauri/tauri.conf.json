@@ -49,6 +49,11 @@
     },
     "security": {
       "csp": null
-    }
+    },
+    "windows": [
+      {
+          "theme": "Dark"
+      }
+    ]
   }
 }
