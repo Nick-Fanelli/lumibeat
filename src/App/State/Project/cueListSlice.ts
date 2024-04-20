@@ -1,11 +1,12 @@
-import { PayloadAction, createSlice } from "@reduxjs/toolkit"
-import Project from "../../../Project/Project";
+import { PayloadAction, createSlice, freeze } from "@reduxjs/toolkit"
 
 import { v4 as uuidv4 } from 'uuid';
+import { AudioPlayer } from "../../AudioPlayer/AudioPlayer";
+import { Cue, CueListUtils, UUID } from "../../../Project/Project";
 
 export interface CueListState {
 
-    value: Project.Cue[]
+    value: Cue[]
 
 }
 
@@ -19,7 +20,7 @@ export const cueListSlice = createSlice({
     name: 'cues',
     initialState,
     reducers: {
-        setCueList: (state, action: PayloadAction<Project.Cue[]>) => {
+        setCueList: (state, action: PayloadAction<Cue[]>) => {
             state.value = action.payload;
         },
 
@@ -27,13 +28,13 @@ export const cueListSlice = createSlice({
             state.value = [...state.value, { uuid: uuidv4(), name: "" } ];
         },
 
-        redefineCue: (state, action: PayloadAction<Project.Cue>) => {
+        redefineCue: (state, action: PayloadAction<Cue>) => {
             
-            const lookupCue = Project.getCueByUUID(state.value, action.payload.uuid);
+            const lookupCue = CueListUtils.getCueByUUID(state.value, action.payload.uuid);
 
             if(lookupCue !== action.payload) {
                 
-                const cueIndex = Project.getIndexByUUID(state.value, action.payload.uuid);
+                const cueIndex = CueListUtils.getCueIndexByUUID(state.value, action.payload.uuid);
 
                 if(cueIndex !== -1) {
                    state.value = [
@@ -49,11 +50,17 @@ export const cueListSlice = createSlice({
 
             console.error("Error with redefine cue reducer");
 
+        },
+
+        setCueAudioPlayer: (state, action: PayloadAction<[UUID, AudioPlayer | undefined]>) => {
+
+            const lookupCue = CueListUtils.getCueByUUID(state.value, action.payload[0]);
+
         }
 
     }
 });
 
-export const { setCueList, addCue, redefineCue } = cueListSlice.actions;
+export const { setCueList, addCue, redefineCue, setCueAudioPlayer } = cueListSlice.actions;
 
 export default cueListSlice.reducer;

@@ -6,10 +6,8 @@ import { save, open } from "@tauri-apps/api/dialog";
 import { invoke } from "@tauri-apps/api";
 
 import { FaFolder, FaPlus, FaTrash } from "react-icons/fa";
-import Project from "../Project/Project";
 import { exists, readTextFile } from '@tauri-apps/api/fs';
 import { useEffect } from 'react';
-import { deserializeProjectStruct } from '../Project/ProjectDataStructure';
 import { Cache } from '../Cache';
 import { useAppVersion } from './CustomHooks/useAppVersion';
 import { RootState } from './State/LauncherStore';
@@ -17,6 +15,7 @@ import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 import { setRecentProjects } from './State/recentProjectsSlice';
 import { listen } from '@tauri-apps/api/event';
+import { ProjectUtils } from '../Project/Project';
 
 const useDetectShouldClose = () => {
 
@@ -102,7 +101,7 @@ const Launcher = () => {
                     return;
                 }
 
-                const project = deserializeProjectStruct(res);        
+                const project = ProjectUtils.deserializeProjectString(res);        
 
                 if(project == null || project == undefined) {
                     console.error("Could not resolve project.");
@@ -150,7 +149,7 @@ const Launcher = () => {
             if(res == null || res == undefined)
                 return;
 
-            Project.initializeProjectDirectoryFromShowfile(res).then((res) => {
+            ProjectUtils.initializeProjectDirectoryFromShowfile(res).then((res) => {
 
                 if(res == undefined || res == null)
                     return;

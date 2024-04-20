@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
-import ProjectStruct, { deserializeProjectStruct } from "../../Project/ProjectDataStructure";
 import { WindowInfo } from "./useAppWindowInfo";
 import { readTextFile } from "@tauri-apps/api/fs";
+import { Project, ProjectUtils } from "../../Project/Project";
 
-const useLoadApp = (appWindowInfo: WindowInfo | undefined, loadProjectIntoState : (_: ProjectStruct) => void, setWindowTitle: (_: string) => void) : [ boolean, string | undefined ] => {
+const useLoadApp = (appWindowInfo: WindowInfo | undefined, loadProjectIntoState : (_: Project) => void, setWindowTitle: (_: string) => void) : [ boolean, string | undefined ] => {
 
     const [value, setValue] = useState<[ boolean, string | undefined ]>([ false, undefined ]);
 
@@ -15,7 +15,7 @@ const useLoadApp = (appWindowInfo: WindowInfo | undefined, loadProjectIntoState 
 
             readTextFile(showFilePath).then((res) => {
 
-                let projectStruct = deserializeProjectStruct(res);
+                let projectStruct = ProjectUtils.deserializeProjectString(res);
                 loadProjectIntoState(projectStruct);
                 setValue([ true, showFilePath ]);
 

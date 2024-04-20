@@ -1,19 +1,19 @@
 import { useCallback, useEffect, useState } from "react";
-import Project, { UUID } from "../../Project/Project";
 import { useSelector } from "react-redux";
 import { RootState } from "../State/AppStore";
 import { useDispatch } from "react-redux";
 import { redefineCue } from "../State/Project/cueListSlice";
+import { Cue, CueListUtils, UUID } from "../../Project/Project";
 
-const usePropertiesCue = (selectedCues: UUID[]) : [ Project.Cue | undefined, (cue: Project.Cue) => void ]=> {
+const usePropertiesCue = (selectedCues: UUID[]) : [ Cue | undefined, (cue: Cue) => void ]=> {
 
     const dispatch = useDispatch();
 
     const cueList = useSelector((state: RootState) => state.cueList.value);
 
-    const [cue, rawSetCue] = useState<Project.Cue | undefined>(undefined);
+    const [cue, rawSetCue] = useState<Cue | undefined>(undefined);
 
-    const setCue = useCallback((cue: Project.Cue) => {
+    const setCue = useCallback((cue: Cue) => {
 
         dispatch(redefineCue(cue));
         rawSetCue(cue);
@@ -23,7 +23,7 @@ const usePropertiesCue = (selectedCues: UUID[]) : [ Project.Cue | undefined, (cu
     useEffect(() => {
 
         if(selectedCues.length === 1) {
-            rawSetCue(Project.getCueByUUID(cueList, selectedCues[0]));
+            rawSetCue(CueListUtils.getCueByUUID(cueList, selectedCues[0]));
         }
 
     }, [selectedCues, cueList]);

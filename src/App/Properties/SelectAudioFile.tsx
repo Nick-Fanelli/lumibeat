@@ -1,11 +1,11 @@
 import { FaLessThan } from 'react-icons/fa';
 import './SelectAudioFile.css'
-import Project from '../../Project/Project';
 import { open } from '@tauri-apps/api/dialog';
+import { Cue } from '../../Project/Project';
 
 type Props = {
 
-    cue: Project.Cue
+    cue: Cue
     audioFilepath: string | undefined,
     setAudioFilepath: (filepath: string) => void
 
