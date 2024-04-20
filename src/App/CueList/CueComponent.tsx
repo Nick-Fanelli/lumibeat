@@ -1,4 +1,3 @@
-import Project, { UUID } from "../../Project/Project";
 import { useState } from "react";
 import DropTarget from "../DragDrop/DropTarget";
 import Draggable from "../DragDrop/Draggable";
@@ -8,6 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../State/AppStore";
 import { setCueList } from "../State/Project/cueListSlice";
 import { setSelectedCues } from "../State/App/selectedCuesSlice";
+import { Cue, UUID } from "../../Project/Project";
 
 type CueComponentProps = {
 
@@ -15,7 +15,7 @@ type CueComponentProps = {
     reportOnCueClick: (event: React.MouseEvent, uuid: UUID) => void,
     deleteCue: (uuid: UUID) => void,
 
-    cue: Project.Cue,
+    cue: Cue,
     index: number
 
 }
@@ -38,7 +38,7 @@ const CueComponent = ({ moveCue, reportOnCueClick, deleteCue, cue, index }: CueC
 
     const [ contextMenu, setContextMenu ] = useState<ContextMenuData>({ isVisible: false, x: 0, y: 0 });
 
-    const updateCueByUUID = (uuid: UUID, cueCallback: (cue: Project.Cue) => Project.Cue) => {
+    const updateCueByUUID = (uuid: UUID, cueCallback: (cue: Cue) => Cue) => {
 
         const targetCueIndex = cueList.findIndex((cue) => cue.uuid === uuid);
 

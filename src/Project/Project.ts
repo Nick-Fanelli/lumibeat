@@ -1,61 +1,54 @@
+import { ask } from "@tauri-apps/api/dialog";
 import { createDir, readDir, writeFile } from "@tauri-apps/api/fs";
 import { basename, dirname, join } from "@tauri-apps/api/path";
-import { ask } from "@tauri-apps/api/dialog";
-import ProjectStruct, { generateGenericProjectStruct, serializeProjectStruct } from "./ProjectDataStructure";
-import { AudioPlayer } from "../App/AudioPlayer/AudioPlayer";
 
 export type UUID = string;
 
-namespace Project {
+export type Cue = {
 
-    export type Cue = {
+    uuid: UUID,
+    name?: string,
+    number?: number,
+    audioSourceFile?: string
 
-        uuid: UUID
-        name?: string
-        number?: number
-        audioPlayer?: AudioPlayer
-    
-    }
+}
 
-    export const getIndexByUUID = (cues: ReadonlyArray<Cue>, uuid: UUID): number => {
-        return cues.findIndex(cue => cue.uuid === uuid);
-    }
+export type Project = {
 
-    export const getCueByUUID = (cues: ReadonlyArray<Cue>, uuid: UUID) : Cue | undefined => {
-        return cues.find(cue => cue.uuid === uuid);
-    }
+    name: string | undefined,
+    cueList: Cue[]
 
-    export const getIndexByUUIDCallback = (cues: ReadonlyArray<Cue>, uuid: UUID, callback: (index: number) => Cue[]) : Cue[] => {
-        const index = getIndexByUUID(cues, uuid);
+}
 
-        if(index === -1) {
-            console.warn(`Could not find cue with UUID of: '${uuid}' in the array of cues`);
-            return [...cues];
-        }
+export namespace ProjectUtils {
 
-        return callback(index);
-    }
+    // ============================================================================
+    // Serialization
+    // ============================================================================
 
-    export const removeCueFromListByUUID = (constCues: ReadonlyArray<Cue>, uuid: UUID) => {
+    export const serializeProject = (project: Project) : string => {
 
-        let cues = [...constCues];
-
-
-        return getIndexByUUIDCallback(cues, uuid, (index: number) => {
-
-            cues.splice(index, 1);
-
-            return cues;
-
-        });
-        
+        return JSON.stringify(project);
 
     }
 
-    export const saveShowFile = (showFilePath: string, projectStruct: ProjectStruct) : Promise<void> => {
+    export const deserializeProjectString = (projectString: string) : Project => {
 
-        // TODO: RUN VALIDATIONS CHECKS ON SHOW FILE OBJECT
-        return writeFile(showFilePath, serializeProjectStruct(projectStruct));
+        let project = JSON.parse(projectString) as Project;
+
+        if(project.name == undefined)
+            project.name = "";
+
+        if(project.cueList == undefined)
+            project.cueList = [];
+
+        return project;
+
+    }
+
+    export const saveProjectToFile = (filepath: string, project: Project) : Promise<void> => {
+
+        return writeFile(filepath, serializeProject(project));
 
     }
 
@@ -96,12 +89,51 @@ namespace Project {
 
         await Promise.all([
             createDir(resourcesPath), // Create Resources Directory
-            saveShowFile(filepath, generateGenericProjectStruct(projectName))
+            saveProjectToFile(filepath, {
+                name: projectName,
+                cueList: []
+            })
         ])
 
         return filepath;
     }
- 
+
 }
 
-export default Project;
+export namespace CueListUtils {
+
+    export const getCueIndexByUUID = (cues: ReadonlyArray<Cue>, uuid: UUID) : number => {
+        return cues.findIndex(cue => cue.uuid === uuid);
+    }
+
+    export const getCueByUUID = (cues: ReadonlyArray<Cue>, uuid: UUID) : Cue | undefined => {
+        return cues.find(cue => cue.uuid === uuid);
+    }
+
+    export const getIndexByUUIDCallback = (cues: ReadonlyArray<Cue>, uuid: UUID, callback: (index: number) => Cue[]) : Cue[] => {
+        const index = getCueIndexByUUID(cues, uuid);
+
+        if(index === -1) {
+            console.warn(`Could not find cue with UUID of: '${uuid}' in the array of cues`);
+            return [...cues];
+        }
+
+        return callback(index);
+    }
+
+    export const removeCueFromListByUUID = (constCues: ReadonlyArray<Cue>, uuid: UUID) => {
+
+        let cues = [...constCues];
+
+
+        return getIndexByUUIDCallback(cues, uuid, (index: number) => {
+
+            cues.splice(index, 1);
+
+            return cues;
+
+        });
+
+    }
+
+}

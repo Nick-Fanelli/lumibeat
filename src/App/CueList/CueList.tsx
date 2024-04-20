@@ -1,11 +1,11 @@
 import './CueList.css'
-import Project, { UUID } from '../../Project/Project';
 import CueComponent from './CueComponent';
 import { Tooltip } from 'react-tooltip';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../State/AppStore';
 import { setSelectedCues } from '../State/App/selectedCuesSlice';
 import { setCueList } from '../State/Project/cueListSlice';
+import { CueListUtils, UUID } from '../../Project/Project';
 
 const CueList = () => {
 
@@ -53,7 +53,7 @@ const CueList = () => {
             dispatch(setSelectedCues(selectedCues.splice(selectionIndex, 1)));
         }
 
-        const updatedCues = Project.removeCueFromListByUUID(cueList, cue);
+        const updatedCues = CueListUtils.removeCueFromListByUUID(cueList, cue);
         dispatch(setCueList(updatedCues));
 
     }

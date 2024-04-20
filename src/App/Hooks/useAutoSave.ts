@@ -1,9 +1,11 @@
 import { useEffect } from "react"
-import ProjectStruct, { generateGenericProjectStruct } from "../../Project/ProjectDataStructure";
-import Project from "../../Project/Project";
 import { appStore } from "../State/AppStore";
+import { Project, ProjectUtils } from "../../Project/Project";
 
-let projectCache: ProjectStruct = generateGenericProjectStruct("");
+let projectCache: Project = {
+    name: "",
+    cueList: []
+};
 
 const onAutoSave = (showFilePath: string, setWindowTitle: (_: string) => void) : Promise<void> => {
 
@@ -29,7 +31,7 @@ const onAutoSave = (showFilePath: string, setWindowTitle: (_: string) => void) :
     if(isModified) {
         
         console.debug("Saving to showfile...")
-        return Project.saveShowFile(showFilePath, projectCache);
+        return ProjectUtils.saveProjectToFile(showFilePath, projectCache);
 
     }
 
