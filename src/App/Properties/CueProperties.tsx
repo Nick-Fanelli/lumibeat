@@ -5,6 +5,7 @@ import SelectAudioFile from "./SelectAudioFile";
 type Props = {
 
     cue: Project.Cue
+    setCueAudioFile: (audioFile: string) => void
 
 }
 
@@ -18,6 +19,8 @@ enum ActiveVisualizerTab {
 const CueProperties = (props: Props) => {
 
     const [activeVisualizerTab, setActiveVisualizerTab] = useState<ActiveVisualizerTab>(ActiveVisualizerTab.AUDIO);
+
+    console.log(props.cue.audioPlayer);
 
     return (
         <div className="controls">
@@ -44,7 +47,12 @@ const CueProperties = (props: Props) => {
                 
                 <div className={`audio ${activeVisualizerTab != ActiveVisualizerTab.AUDIO ? 'hidden' : ''}`}>
 
-                    <SelectAudioFile cue={props.cue} />
+                    <button onClick={() => {
+                        props.cue.audioPlayer?.play();
+                    }}>Play</button>
+
+
+                    <SelectAudioFile cue={props.cue} audioFilepath={props.cue.audioPlayer?.getFilepath()} setAudioFilepath={props.setCueAudioFile} />
 
                 </div>
 

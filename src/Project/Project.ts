@@ -2,6 +2,7 @@ import { createDir, readDir, writeFile } from "@tauri-apps/api/fs";
 import { basename, dirname, join } from "@tauri-apps/api/path";
 import { ask } from "@tauri-apps/api/dialog";
 import ProjectStruct, { generateGenericProjectStruct, serializeProjectStruct } from "./ProjectDataStructure";
+import { AudioPlayer } from "../App/AudioPlayer/AudioPlayer";
 
 export type UUID = string;
 
@@ -12,7 +13,7 @@ namespace Project {
         uuid: UUID
         name?: string
         number?: number
-        audioFile?: string
+        audioPlayer?: AudioPlayer
     
     }
 

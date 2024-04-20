@@ -2,6 +2,7 @@ import { convertFileSrc } from '@tauri-apps/api/tauri';
 import { Howl } from 'howler' 
 
 let audioPlayers : AudioPlayer[] = [];
+let sources : Map<string, Howl> = new Map();
 
 export const initializeAudioSystem = () => {
 
@@ -10,49 +11,59 @@ export const initializeAudioSystem = () => {
     });
 
     audioPlayers = [];
+    
+    sources.forEach((source) => source.unload());
+    sources.clear();
+
+}
+
+const getAudioSource = (filepath: string) : Howl => {
+
+    if(!sources.has(filepath)) {
+
+        const howl = new Howl({
+            src: convertFileSrc(filepath)
+        });
+
+        sources.set(filepath, howl);
+
+    }
+
+    return sources.get(filepath)!;
 
 }
 
 export class AudioPlayer {
 
     private filepath: string;
-    private source: Howl;
 
-    private constructor(filepath: string, source: Howl) {
+    constructor(filepath: string) {
         this.filepath = filepath;
-        this.source = source;
+
+        getAudioSource(this.filepath); // Create audio source
 
         audioPlayers.push(this);
-    }
-
-    static async createAudioPlayer(filepath: string): Promise<AudioPlayer> {
-        const sound = new Howl({
-            src: convertFileSrc(filepath),
-        });
-
-        const audioPlayer = new AudioPlayer(filepath, sound);
-        return Promise.resolve(audioPlayer);
     }
 
     getFilepath() : string { return this.filepath; }
 
     isPlaying(): boolean {
-        return this.source.playing();
+        return getAudioSource(this.filepath).playing();
     }
 
     play() {
         if(this.isPlaying())
-            this.source.stop();
+            getAudioSource(this.filepath).stop();
 
-        this.source.play();
+        getAudioSource(this.filepath).play();
     }
 
     pause() {
-        this.source.pause();
+        getAudioSource(this.filepath).pause();
     }
 
     stop() {
-        this.source.stop();
+        getAudioSource(this.filepath).stop();
     }
 
     playPause() {
@@ -63,20 +74,20 @@ export class AudioPlayer {
     }
 
     getDuration(): number { 
-        return this.source.duration();
+        return getAudioSource(this.filepath).duration();
     }
 
     getCurrentTime(): number { 
-        return this.source.seek();
+        return getAudioSource(this.filepath).seek();
     }
 
     seekTo(seek: number) {
-        this.source.seek(seek);
+        getAudioSource(this.filepath).seek(seek);
     }
 
     destroy() {
         this.stop();
-        this.source.unload();
+        getAudioSource(this.filepath).unload();
     }
 
 }
