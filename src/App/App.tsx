@@ -11,10 +11,10 @@ import useLoadApp from "./Hooks/useLoadApp";
 import useAutoSave from "./Hooks/useAutoSave";
 import useCatchAppClose from "./Hooks/useCatchAppClose";
 import { invoke } from "@tauri-apps/api";
-import ProjectStruct from "../Project/ProjectDataStructure";
 import { useDispatch } from "react-redux";
 import { setProjectName } from "./State/Project/projectNameSlice";
 import { setCueList } from "./State/Project/cueListSlice";
+import { Project } from "../Project/Project";
 
 const setWindowTitle = (windowTitle: string) => {
     invoke('set_window_title', {
@@ -26,7 +26,7 @@ const App = () => {
 
     const dispatch = useDispatch();
 
-    const loadProjectIntoState = (projectStruct: ProjectStruct) => {
+    const loadProjectIntoState = (projectStruct: Project) => {
         
         dispatch(setProjectName(projectStruct.name || ""));
         dispatch(setCueList(projectStruct.cueList));
@@ -37,6 +37,7 @@ const App = () => {
     const [ isLoaded, showFilePath ] = useLoadApp(appWindowInfo, loadProjectIntoState, setWindowTitle);
 
     const onManualSaveCallback = useAutoSave(showFilePath, setWindowTitle);
+
     useCatchAppClose(appWindowInfo, onManualSaveCallback);
 
     if(!isLoaded) {
