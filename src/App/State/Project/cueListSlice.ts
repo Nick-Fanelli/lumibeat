@@ -1,8 +1,7 @@
-import { PayloadAction, createSlice, freeze } from "@reduxjs/toolkit"
+import { PayloadAction, createSlice } from "@reduxjs/toolkit"
 
 import { v4 as uuidv4 } from 'uuid';
-import { AudioPlayer } from "../../AudioPlayer/AudioPlayer";
-import { Cue, CueListUtils, UUID } from "../../../Project/Project";
+import { Cue, CueListUtils } from "../../../Project/Project";
 
 export interface CueListState {
 
@@ -50,17 +49,11 @@ export const cueListSlice = createSlice({
 
             console.error("Error with redefine cue reducer");
 
-        },
-
-        setCueAudioPlayer: (state, action: PayloadAction<[UUID, AudioPlayer | undefined]>) => {
-
-            const lookupCue = CueListUtils.getCueByUUID(state.value, action.payload[0]);
-
         }
 
     }
 });
 
-export const { setCueList, addCue, redefineCue, setCueAudioPlayer } = cueListSlice.actions;
+export const { setCueList, addCue, redefineCue } = cueListSlice.actions;
 
 export default cueListSlice.reducer;
