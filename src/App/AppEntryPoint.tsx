@@ -3,7 +3,7 @@ import ReactDOM from "react-dom/client";
 
 import '../index.css'
 
-import { initializeAudioSystem } from "./AudioPlayer/AudioPlayer";
+import { initializeAudioSystem } from "./AudioPlayer/Audio";
 import App from "./App";
 import EntryPointGlobalConfigurations from "../EntryPointGloablConfigurations";
 import { appStore } from "./State/AppStore";

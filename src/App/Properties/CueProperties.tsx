@@ -1,6 +1,7 @@
 import { useState } from "react";
 import SelectAudioFile from "./SelectAudioFile";
 import { Cue } from "../../Project/Project";
+import { AudioPlayerManager } from "../AudioPlayer/Audio";
 
 type Props = {
 
@@ -46,7 +47,8 @@ const CueProperties = (props: Props) => {
                 <div className={`audio ${activeVisualizerTab != ActiveVisualizerTab.AUDIO ? 'hidden' : ''}`}>
 
                     <button onClick={() => {
-                        // props.cue.audioPlayer?.play();
+                        if(props.cue.audioSourceFile)
+                            AudioPlayerManager.play(props.cue.audioSourceFile);
                     }}>Play</button>
 
 

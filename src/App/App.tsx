@@ -15,6 +15,7 @@ import { useDispatch } from "react-redux";
 import { setProjectName } from "./State/Project/projectNameSlice";
 import { setCueList } from "./State/Project/cueListSlice";
 import { Project } from "../Project/Project";
+import { AudioPlayer } from "./AudioPlayer/Audio";
 
 const setWindowTitle = (windowTitle: string) => {
     invoke('set_window_title', {
@@ -30,6 +31,16 @@ const App = () => {
         
         dispatch(setProjectName(projectStruct.name || ""));
         dispatch(setCueList(projectStruct.cueList));
+
+        // Pre-Load Audio Players
+        projectStruct.cueList.forEach((cue) => {
+
+            if(cue.audioSourceFile) {
+                // Generate the audio players to be cached automatically
+                new AudioPlayer(cue.audioSourceFile);
+            }
+
+        });
 
     }
 

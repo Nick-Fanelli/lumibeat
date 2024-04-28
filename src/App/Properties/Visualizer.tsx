@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef } from "react";
-import { AudioPlayer } from "../AudioPlayer/AudioPlayer";
+import { AudioPlayer } from "../AudioPlayer/Audio";
 import Trigger from "./Trigger";
 
 type VisualizerProps = {
