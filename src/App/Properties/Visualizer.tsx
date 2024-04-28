@@ -1,36 +1,34 @@
 import { useCallback, useEffect, useRef } from "react";
-import { AudioPlayer } from "../AudioPlayer/Audio";
-import Trigger from "./Trigger";
+import { Cue } from "../../Project/Project";
+import { useGetCueAudioPlayer } from "../Hooks/useGetCueAudioPlayer";
 
 type VisualizerProps = {
 
-    audioPlayer: AudioPlayer,
-    triggers: Trigger[],
-    playhead: number // used to be Signal<number> removed for build but no longer reactive
+    cue: Cue
 
 }
 
 const Visualizer = (props: VisualizerProps) => {
 
+    const { audioPlayer, playhead, duration } = useGetCueAudioPlayer(props.cue);
     const visualizerRef = useRef<HTMLDivElement>(null);
 
     // const formattedDuration = useMemo(() => formatTime(props.audioPlayer.getDuration()), [props.audioPlayer]);
 
     const onVisualizerClick = useCallback((x: number) => {
 
+        if(!audioPlayer)
+            return;
+
         const relativeClickPosition = x / visualizerRef.current!.offsetWidth;
-        const newPlayheadPosition = relativeClickPosition * props.audioPlayer.getDuration();
-        const clampedPlayheadPosition = Math.min(Math.max(newPlayheadPosition, 0), props.audioPlayer.getDuration());
+        const newPlayheadPosition = relativeClickPosition * duration;
+        const clampedPlayheadPosition = Math.min(Math.max(newPlayheadPosition, 0), duration);
 
-        props.audioPlayer.seekTo(clampedPlayheadPosition);
+        audioPlayer.seekTo(clampedPlayheadPosition);
 
-    }, [props.audioPlayer, visualizerRef.current]);
+    }, [ audioPlayer, visualizerRef.current]);
 
     useEffect(() => {
-
-        const playbackRefreshInterval = setInterval(() => {
-            props.playhead = props.audioPlayer.getCurrentTime();
-        }, 10);
 
         const handleMouseUp = (e: MouseEvent) => {
             
@@ -73,11 +71,12 @@ const Visualizer = (props: VisualizerProps) => {
             document?.removeEventListener('mousemove', handleMouseMove);
             document?.removeEventListener('mouseup', handleMouseUp);
 
-            clearInterval(playbackRefreshInterval);
-
         }
 
     }, [visualizerRef.current, onVisualizerClick]);
+
+    if(!audioPlayer)
+        return <section id="visualizer"></section>
 
     return (
         <>
@@ -86,17 +85,17 @@ const Visualizer = (props: VisualizerProps) => {
                 <div className="waveform" ref={visualizerRef}>
 
                     <div className="midline"></div>
-
+{/* 
                     {
                         props.triggers.map((trigger, index) => (
                             <div key={index} className='trigger' style={{
                                 left: `${(trigger.timestamp / props.audioPlayer.getDuration()) * 100}%`
                             }}></div>
                         ))
-                    }
+                    } */}
 
                     <div className="playhead" style={{
-                        left: `${(props.playhead / props.audioPlayer.getDuration()) * 100}%`
+                        left: `${(playhead / duration) * 100}%`
                     }}></div>
 
                 </div>

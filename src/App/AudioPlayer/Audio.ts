@@ -1,5 +1,6 @@
 import { convertFileSrc } from '@tauri-apps/api/tauri';
 import { Howl } from 'howler' 
+import { UUID } from '../../Project/Project';
 
 export const initializeAudioSystem = () => {
 
@@ -12,11 +13,11 @@ export class AudioPlayer {
     private filepath: string;
     private source: Howl;
 
-    constructor(filepath: string) {
+    constructor(uuid: UUID, filepath: string) {
         this.filepath = filepath;
         this.source = new Howl({ src: convertFileSrc(filepath) });
 
-        AudioPlayerManager.reportPlayer(filepath, this);
+        AudioPlayerManager.reportPlayer(uuid, this);
     }
 
     getFilepath() : string { return this.filepath; }
@@ -68,7 +69,7 @@ export class AudioPlayer {
 
 export class AudioPlayerManager {
 
-    private static players: Map<string, AudioPlayer> = new Map();
+    private static players: Map<UUID, AudioPlayer> = new Map();
 
     static initializeSystem = () => {
         
@@ -80,44 +81,38 @@ export class AudioPlayerManager {
 
     }
 
-    static reportPlayer = (filepath: string, player: AudioPlayer) => {
+    static reportPlayer = (uuid: UUID, player: AudioPlayer) => {
 
-        if(this.players.has(filepath))
-            this.players.get(filepath)?.destroy();
+        if(this.players.has(uuid))
+            this.players.get(uuid)?.destroy();
 
-        this.players.set(filepath, player);
-
-    }
-
-    static requestDestroyPlayer = (filepath: string) => {
-
-        if(this.players.has(filepath))
-            this.players.get(filepath)?.destroy();
-
-        this.players.delete(filepath);
+        this.players.set(uuid, player);
 
     }
 
-    static getPlayer = (filepath: string) : AudioPlayer | undefined => {
-        const player = this.players.get(filepath);
+    static getPlayer = (uuid: UUID) : AudioPlayer | undefined => {
+        return this.players.get(uuid);
+    } 
 
-        if(player)
-            return player;
+    static requestDestroyPlayer = (uuid: UUID) => {
 
-        console.warn("WARNING: Requesting audio player that doesn't exist :(");
-        return new AudioPlayer(filepath);
+        if(this.players.has(uuid))
+            this.players.get(uuid)?.destroy();
+
+        this.players.delete(uuid);
+
     }
 
-    static hasPlayer = (filepath: string) => {
-        return this.players.has(filepath);
+    static hasPlayer = (uuid: UUID) => {
+        return this.players.has(uuid);
     }
 
-    static play = (filepath: string) => {
-        this.players.get(filepath)?.play();
+    static play = (uuid: UUID) => {
+        this.players.get(uuid)?.play();
     }
 
-    static stop = (filepath: string) => {
-        this.players.get(filepath)?.stop();
+    static stop = (uuid: UUID) => {
+        this.players.get(uuid)?.stop();
     }
 
 }

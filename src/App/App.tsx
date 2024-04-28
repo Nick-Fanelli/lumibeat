@@ -37,7 +37,7 @@ const App = () => {
 
             if(cue.audioSourceFile) {
                 // Generate the audio players to be cached automatically
-                new AudioPlayer(cue.audioSourceFile);
+                new AudioPlayer(cue.uuid, cue.audioSourceFile);
             }
 
         });
