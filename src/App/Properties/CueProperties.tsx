@@ -48,7 +48,7 @@ const CueProperties = (props: Props) => {
 
                     <button onClick={() => {
                         if(props.cue.audioSourceFile)
-                            AudioPlayerManager.play(props.cue.audioSourceFile);
+                            AudioPlayerManager.play(props.cue.uuid);
                     }}>Play</button>
 
 

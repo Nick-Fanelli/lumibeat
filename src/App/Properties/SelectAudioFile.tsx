@@ -1,4 +1,3 @@
-import { FaLessThan } from 'react-icons/fa';
 import './SelectAudioFile.css'
 import { open } from '@tauri-apps/api/dialog';
 import { Cue } from '../../Project/Project';
@@ -37,16 +36,9 @@ const SelectAudioFile = (props: Props) => {
     }
     
     return (
-        <div className='select-audio-file' onClick={selectAudioFile}>
+        <div className='select-audio-file'>
             <h1 className='label'>Audio File Resource Path</h1>
-            <div className="selection-box">
-                <div>
-                    <p>{props.audioFilepath}</p>
-                </div>
-                <div className="selection-btn">
-                    <FaLessThan />
-                </div>
-            </div>
+            <input type="text" contentEditable={false} value={props.audioFilepath} onClick={selectAudioFile} />
         </div>
     )
 
