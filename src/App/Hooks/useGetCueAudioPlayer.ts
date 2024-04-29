@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
 import { Cue } from "../../Project/Project";
 import { AudioPlayer, AudioPlayerManager } from "../AudioPlayer/Audio";
+import Trigger from "../Properties/Trigger";
 
-export const useGetCueAudioPlayer = (cue: Cue) : { audioPlayer: AudioPlayer | undefined, playhead: number, duration: number } => {
+export const useGetCueAudioPlayer = (cue: Cue) : { audioPlayer: AudioPlayer | undefined, playhead: number, duration: number, triggers: Trigger[] } => {
 
     const [audioPlayer, setAudioPlayer] = useState<AudioPlayer | undefined>(undefined);
+    const [triggers, setTriggers] = useState<Trigger[]>([]);
 
     const [playhead, setPlayhead] = useState<number>(0);
     const [duration, setDuration] = useState<number>(0);
@@ -14,6 +16,7 @@ export const useGetCueAudioPlayer = (cue: Cue) : { audioPlayer: AudioPlayer | un
         const player = AudioPlayerManager.getPlayer(cue.uuid);
 
         setAudioPlayer(player);
+        setTriggers(cue.triggers || []);
 
         if(player) {
             setDuration(player.getDuration());
@@ -39,6 +42,6 @@ export const useGetCueAudioPlayer = (cue: Cue) : { audioPlayer: AudioPlayer | un
 
     }, [audioPlayer])
 
-    return { audioPlayer, playhead, duration };
+    return { audioPlayer, playhead, duration, triggers };
 
 }

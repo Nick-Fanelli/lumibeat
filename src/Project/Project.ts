@@ -4,12 +4,19 @@ import { basename, dirname, join } from "@tauri-apps/api/path";
 
 export type UUID = string;
 
+export type Trigger = {
+
+    timestamp: number
+
+}
+
 export type Cue = {
 
     uuid: UUID,
     name?: string,
     number?: number,
     audioSourceFile?: string
+    triggers?: Trigger[]
 
 }
 

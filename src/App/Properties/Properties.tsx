@@ -5,6 +5,7 @@ import usePropertiesCue from './usePropertiesCue';
 import CueProperties from './CueProperties';
 import { AudioPlayer, AudioPlayerManager } from '../AudioPlayer/Audio';
 import Visualizer from './Visualizer';
+import Trigger from './Trigger';
 
 // const formatTime = (seconds: number) => [seconds / 60, seconds % 60, (seconds % 1) * 1000].map((v) => `0${Math.floor(v)}`.slice(-2)).join(':');
 
@@ -60,13 +61,26 @@ const Properties = () => {
 
     }
 
+    const addCueTrigger = async (timestamp: number) => {
+
+        let triggers: Trigger[] = [];
+
+        if(cue.triggers)
+            triggers = [ ...cue.triggers ];
+
+        triggers.push({ timestamp });
+
+        setCue({ ...cue, triggers: triggers });
+
+    }
+
     return (
 
         <section id="audio-visualizer">
 
             {
                 <>
-                    <CueProperties cue={cue} setCueAudioFile={setCueAudioFile} />
+                    <CueProperties cue={cue} setCueAudioFile={setCueAudioFile} addCueTrigger={addCueTrigger} />
                 </>
             }
 

@@ -94,6 +94,10 @@ export class AudioPlayerManager {
         return this.players.get(uuid);
     } 
 
+    static getTimestamp = (uuid: UUID) : number | undefined => {
+        return this.players.get(uuid)?.getCurrentTime();
+    }
+
     static requestDestroyPlayer = (uuid: UUID) => {
 
         if(this.players.has(uuid))
@@ -114,5 +118,6 @@ export class AudioPlayerManager {
     static stop = (uuid: UUID) => {
         this.players.get(uuid)?.stop();
     }
+
 
 }

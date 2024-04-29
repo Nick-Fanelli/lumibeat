@@ -7,6 +7,7 @@ type Props = {
 
     cue: Cue
     setCueAudioFile: (audioFile: string) => void
+    addCueTrigger: (timestamp: number) => void
 
 }
 
@@ -57,8 +58,15 @@ const CueProperties = (props: Props) => {
                 </div>
 
                 <div className={`timing ${activeVisualizerTab != ActiveVisualizerTab.TIMING ? 'hidden' : ''}`}>
-                    
-                    <h1>TO BE IMPLEMENTED (TIMING)</h1>
+
+                    <button onClick={() => {
+
+                        const timestamp = AudioPlayerManager.getTimestamp(props.cue.uuid);
+
+                        if(timestamp)
+                            props.addCueTrigger(timestamp);
+
+                    }}>Add Trigger</button>
 
                 </div>
 
