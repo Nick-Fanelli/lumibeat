@@ -50,6 +50,7 @@ export namespace Cache {
         
         if(appCacheFilepath == undefined) {
             const appCacheDirectory = await appCacheDir();
+            console.log(appCacheDirectory);
             appCacheFilepath = await join(appCacheDirectory, "lumibeat-cache.json");
         }
 

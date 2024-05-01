@@ -25,8 +25,10 @@ const useDetectShouldClose = () => {
 
             const windowUUID = e.payload;
 
-            if(windowUUID === "*")
+            if(windowUUID === "*") {
                 invoke('close_window');
+                Cache.commitCache();
+            }
 
         });
 
@@ -77,6 +79,9 @@ const Launcher = () => {
         } else {
             dispatch(setRecentProjects([...recentProjects]));
         }
+
+        Cache.cache.recentProjects = recentProjects;
+        Cache.commitCache();
 
     }
 
