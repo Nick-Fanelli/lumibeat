@@ -7,7 +7,7 @@
   },
   "package": {
     "productName": "Lumibeat",
-    "version": "1.0.0-prerelease"
+    "version": "1.0.0"
   },
   "tauri": {
     "allowlist": {

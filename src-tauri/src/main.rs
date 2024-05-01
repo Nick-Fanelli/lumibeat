@@ -140,9 +140,8 @@ fn main() {
 
     let menu = generate_menu_bar();
 
-    let app = tauri::Builder::default()
+    let mut app_builder = tauri::Builder::default()
         .manage(state)
-        .menu(menu)
         .invoke_handler(tauri::generate_handler![
             open_app,
             get_app_window_info,
@@ -156,9 +155,16 @@ fn main() {
                 }
                 _ => {}
             }
-        })
-    .build(tauri::generate_context!())
-    .expect("Error creating app context");
+    });
+
+    // Only display menubar on MacOS for the quit method    
+    if cfg!(target_os = "macos") {
+        app_builder = app_builder.menu(menu);
+    }
+
+    let app = app_builder
+        .build(tauri::generate_context!())
+        .expect("Error creating app context");
 
     tauri::WindowBuilder::new(
         &app,
