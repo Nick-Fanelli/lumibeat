@@ -1,32 +1,34 @@
 import { useCallback, useEffect, useRef } from "react";
 import { Cue } from "../../Project/Project";
-import { useGetCueAudioPlayer } from "../Hooks/useGetCueAudioPlayer";
+import { AudioPlayer } from "../AudioPlayer/Audio";
+import Trigger from "./Trigger";
 
 type VisualizerProps = {
 
-    cue: Cue
+    cue: Cue,
+    audioPlayer: AudioPlayer | undefined
+    duration: number
+    triggers: Trigger[],
+    playhead: number
 
 }
 
 const Visualizer = (props: VisualizerProps) => {
 
-    const { audioPlayer, playhead, duration, triggers } = useGetCueAudioPlayer(props.cue);
     const visualizerRef = useRef<HTMLDivElement>(null);
-
-    // const formattedDuration = useMemo(() => formatTime(props.audioPlayer.getDuration()), [props.audioPlayer]);
 
     const onVisualizerClick = useCallback((x: number) => {
 
-        if(!audioPlayer)
+        if(!props.audioPlayer)
             return;
 
         const relativeClickPosition = x / visualizerRef.current!.offsetWidth;
-        const newPlayheadPosition = relativeClickPosition * duration;
-        const clampedPlayheadPosition = Math.min(Math.max(newPlayheadPosition, 0), duration);
+        const newPlayheadPosition = relativeClickPosition * props.duration;
+        const clampedPlayheadPosition = Math.min(Math.max(newPlayheadPosition, 0), props.duration);
 
-        audioPlayer.seekTo(clampedPlayheadPosition);
+        props.audioPlayer.seekTo(clampedPlayheadPosition);
 
-    }, [ audioPlayer, visualizerRef.current]);
+    }, [ props.audioPlayer, visualizerRef.current]);
 
     useEffect(() => {
 
@@ -75,7 +77,7 @@ const Visualizer = (props: VisualizerProps) => {
 
     }, [visualizerRef.current, onVisualizerClick]);
 
-    if(!audioPlayer)
+    if(!props.audioPlayer)
         return <section id="visualizer"></section>
 
     return (
@@ -87,15 +89,15 @@ const Visualizer = (props: VisualizerProps) => {
                     <div className="midline"></div>
                 
                     {
-                        triggers.map((trigger, index) => (
+                        props.triggers.map((trigger, index) => (
                             <div key={index} className='trigger' style={{
-                                left: `${(trigger.timestamp / duration) * 100}%`
+                                left: `${(trigger.timestamp / props.duration) * 100}%`
                             }}></div>
                         ))
                     }
 
                     <div className="playhead" style={{
-                        left: `${(playhead / duration) * 100}%`
+                        left: `${(props.playhead / props.duration) * 100}%`
                     }}></div>
 
                 </div>
