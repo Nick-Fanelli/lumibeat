@@ -38,7 +38,7 @@ const SelectAudioFile = (props: Props) => {
     return (
         <div className='select-audio-file'>
             <h1 className='label'>Audio File Resource Path</h1>
-            <input type="text" contentEditable={false} value={props.audioFilepath} onClick={selectAudioFile} />
+            <input type="text" contentEditable={false} value={props.audioFilepath} readOnly onClick={selectAudioFile} />
         </div>
     )
 

@@ -4,6 +4,7 @@ import { Cue } from "../../Project/Project";
 import { AudioPlayerManager } from "../AudioPlayer/Audio";
 import Trigger from "./Trigger";
 import { useFormattedDuration } from "../Hooks/useFormattedDuration";
+import { useSortTriggers } from "../Hooks/useSortTriggers";
 
 type Props = {
 
@@ -39,6 +40,8 @@ const TriggerListElement = (props: TriggerListElementProps) => {
 }
 
 const CueProperties = (props: Props) => {
+
+    const triggers = useSortTriggers(props.triggers);
 
     const [activeVisualizerTab, setActiveVisualizerTab] = useState<ActiveVisualizerTab>(ActiveVisualizerTab.AUDIO);
 
@@ -94,8 +97,8 @@ const CueProperties = (props: Props) => {
                     <div className="triggers-scroll">
                         <ul id="triggers-list">
                             {
-                                props.triggers.map((trigger) => (
-                                    <TriggerListElement trigger={trigger} />
+                                triggers.map((trigger, index) => (
+                                    <TriggerListElement key={"trigger-" + index} trigger={trigger} />
                                 ))
                             }
                         </ul>
