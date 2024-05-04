@@ -5,7 +5,7 @@ import usePropertiesCue from './usePropertiesCue';
 import CueProperties from './CueProperties';
 import { AudioPlayer, AudioPlayerManager } from '../AudioPlayer/Audio';
 import Visualizer from './Visualizer';
-import Trigger from './Trigger';
+import { Trigger } from '../../Project/Project';
 import { useGetCueAudioPlayer } from '../Hooks/useGetCueAudioPlayer';
 
 const Properties = () => {

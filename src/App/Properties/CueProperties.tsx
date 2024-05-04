@@ -2,7 +2,7 @@ import { useState } from "react";
 import SelectAudioFile from "./SelectAudioFile";
 import { Cue } from "../../Project/Project";
 import { AudioPlayerManager } from "../AudioPlayer/Audio";
-import Trigger from "./Trigger";
+import { Trigger } from "../../Project/Project";
 import { useFormattedTimestamp } from "../Hooks/useFormattedDuration";
 import { useSortTriggers } from "../Hooks/useSortTriggers";
 
@@ -39,7 +39,7 @@ const TriggerListElement = (props: TriggerListElementProps) => {
             <p>{formattedDuration}</p>
             <div>
                 <p>EOS Cue #</p>
-                <input type="number" name="Cue Number to Fire" id="" />
+                <input type="number" name="Cue Number to Fire" id="" defaultValue={props.trigger.networkCue} />
             </div>
         </li>
     )

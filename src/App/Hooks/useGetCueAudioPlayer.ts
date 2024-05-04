@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Cue } from "../../Project/Project";
 import { AudioPlayer, AudioPlayerManager } from "../AudioPlayer/Audio";
-import Trigger from "../Properties/Trigger";
+import { Trigger } from "../../Project/Project";
 import { useFormattedTimestamp } from "./useFormattedDuration";
 
 export const useGetCueAudioPlayer = (cue: Cue | undefined) : { audioPlayer: AudioPlayer | undefined, playhead: number, formattedPlayhead: string, duration: number, triggers: Trigger[] } => {

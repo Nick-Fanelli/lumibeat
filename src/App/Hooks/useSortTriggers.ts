@@ -1,6 +1,5 @@
 import { useMemo } from "react";
-import Trigger from "../Properties/Trigger";
-
+import { Trigger } from "../../Project/Project";
 
 export const useSortTriggers = (triggers: Trigger[]) : Trigger[] => {
 
