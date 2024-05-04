@@ -7,6 +7,7 @@ export type UUID = string;
 export type Trigger = {
 
     timestamp: number
+    networkCue?: number
 
 }
 

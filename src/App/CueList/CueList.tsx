@@ -50,7 +50,12 @@ const CueList = () => {
         const selectionIndex = selectedCues.indexOf(cue);
 
         if(selectionIndex !== -1) {
-            dispatch(setSelectedCues(selectedCues.splice(selectionIndex, 1)));
+
+            let updatedSelectedCues = [...selectedCues];
+            updatedSelectedCues.splice(selectionIndex, 1);
+
+            dispatch(setSelectedCues(updatedSelectedCues));
+
         }
 
         const updatedCues = CueListUtils.removeCueFromListByUUID(cueList, cue);

@@ -38,7 +38,14 @@ const SelectAudioFile = (props: Props) => {
     return (
         <div className='select-audio-file'>
             <h1 className='label'>Audio File Resource Path</h1>
-            <input type="text" contentEditable={false} value={props.audioFilepath} readOnly onClick={selectAudioFile} />
+            <div onClick={selectAudioFile} style={{
+                backgroundColor: "gray",
+                width: "100%",
+                height: "5em",
+                cursor: 'pointer'
+            }}>
+                <p>{props.audioFilepath}</p>
+            </div>
         </div>
     )
 
