@@ -4,7 +4,6 @@ import SplitPane from "./SplitPane/SplitPane";
 
 import './App.css'
 import Properties from "./Properties/Properties";
-import StatusBar from "./StatusBar/StatusBar";
 
 import useAppWindowInfo from "./Hooks/useAppWindowInfo";
 import useLoadApp from "./Hooks/useLoadApp";
@@ -68,8 +67,6 @@ const App = () => {
 
             </SplitPane>
 
-            <StatusBar />
-            
         </section>
 
     )
