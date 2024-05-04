@@ -13,7 +13,7 @@ const Properties = () => {
     const selectedCues = useSelector((state: RootState) => state.selectedCues.value);
     const [ cue, setCue ] = usePropertiesCue(selectedCues);
 
-    const { audioPlayer, playhead, duration, triggers } = useGetCueAudioPlayer(cue);
+    const { audioPlayer, playhead, formattedPlayhead, duration, triggers } = useGetCueAudioPlayer(cue);
     
     if(cue == undefined)
         return null;
@@ -47,7 +47,7 @@ const Properties = () => {
 
             {
                 <>
-                    <CueProperties cue={cue} setCueAudioFile={setCueAudioFile} addCueTrigger={addCueTrigger} triggers={triggers} />
+                    <CueProperties cue={cue} setCueAudioFile={setCueAudioFile} addCueTrigger={addCueTrigger} triggers={triggers} formattedPlayhead={formattedPlayhead} />
                 </>
             }
 

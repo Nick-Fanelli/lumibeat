@@ -3,7 +3,7 @@ import SelectAudioFile from "./SelectAudioFile";
 import { Cue } from "../../Project/Project";
 import { AudioPlayerManager } from "../AudioPlayer/Audio";
 import Trigger from "./Trigger";
-import { useFormattedDuration } from "../Hooks/useFormattedDuration";
+import { useFormattedTimestamp } from "../Hooks/useFormattedDuration";
 import { useSortTriggers } from "../Hooks/useSortTriggers";
 
 type Props = {
@@ -11,6 +11,7 @@ type Props = {
     cue: Cue
     setCueAudioFile: (audioFile: string) => void
     addCueTrigger: (timestamp: number) => void
+    formattedPlayhead: string
 
     triggers: Trigger[]
 
@@ -31,10 +32,16 @@ type TriggerListElementProps = {
 
 const TriggerListElement = (props: TriggerListElementProps) => {
 
-    const formattedDuration = useFormattedDuration(props.trigger.timestamp);
+    const formattedDuration = useFormattedTimestamp(props.trigger.timestamp);
 
     return (
-        <li>EOS GO @ {formattedDuration}</li>
+        <li>
+            <p>{formattedDuration}</p>
+            <div>
+                <p>EOS Cue #</p>
+                <input type="number" name="Cue Number to Fire" id="" />
+            </div>
+        </li>
     )
 
 }
@@ -91,6 +98,9 @@ const CueProperties = (props: Props) => {
                                 props.addCueTrigger(timestamp);
 
                         }}>Add Trigger</button>
+
+                        <p>{props.formattedPlayhead}</p>
+
                         <button>Delete Trigger</button>
                     </div>
 

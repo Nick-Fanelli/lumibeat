@@ -2,14 +2,17 @@ import { useEffect, useState } from "react";
 import { Cue } from "../../Project/Project";
 import { AudioPlayer, AudioPlayerManager } from "../AudioPlayer/Audio";
 import Trigger from "../Properties/Trigger";
+import { useFormattedTimestamp } from "./useFormattedDuration";
 
-export const useGetCueAudioPlayer = (cue: Cue | undefined) : { audioPlayer: AudioPlayer | undefined, playhead: number, duration: number, triggers: Trigger[] } => {
+export const useGetCueAudioPlayer = (cue: Cue | undefined) : { audioPlayer: AudioPlayer | undefined, playhead: number, formattedPlayhead: string, duration: number, triggers: Trigger[] } => {
 
     const [audioPlayer, setAudioPlayer] = useState<AudioPlayer | undefined>(undefined);
     const [triggers, setTriggers] = useState<Trigger[]>([]);
 
     const [playhead, setPlayhead] = useState<number>(0);
     const [duration, setDuration] = useState<number>(0);
+
+    const formattedPlayhead = useFormattedTimestamp(playhead);
 
     useEffect(() => {
 
@@ -33,8 +36,16 @@ export const useGetCueAudioPlayer = (cue: Cue | undefined) : { audioPlayer: Audi
 
         const playbackRefreshInterval = setInterval(() => {
 
-            if(audioPlayer)
-                setPlayhead(audioPlayer.getCurrentTime());
+            if(audioPlayer) {
+                setPlayhead((prev) => {
+
+                    if(audioPlayer.getCurrentTime() !== prev) {
+                        return audioPlayer.getCurrentTime();
+                    }
+
+                    return prev;
+                });
+            }
 
         }, 10);
 
@@ -45,6 +56,6 @@ export const useGetCueAudioPlayer = (cue: Cue | undefined) : { audioPlayer: Audi
 
     }, [audioPlayer])
 
-    return { audioPlayer, playhead, duration, triggers };
+    return { audioPlayer, playhead, formattedPlayhead, duration, triggers };
 
 }
