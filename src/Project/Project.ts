@@ -1,11 +1,13 @@
 import { ask } from "@tauri-apps/api/dialog";
 import { createDir, readDir, writeFile } from "@tauri-apps/api/fs";
 import { basename, dirname, join } from "@tauri-apps/api/path";
+import { v4 as uuidv4 } from 'uuid';
 
 export type UUID = string;
 
 export type Trigger = {
 
+    uuid: UUID
     timestamp: number
     networkCue?: number
 
@@ -36,7 +38,7 @@ export namespace ProjectUtils {
 
     export const serializeProject = (project: Project) : string => {
 
-        return JSON.stringify(project);
+        return JSON.stringify(project, null, "\t");
 
     }
 
@@ -49,7 +51,7 @@ export namespace ProjectUtils {
 
         if(project.cueList == undefined)
             project.cueList = [];
-
+        
         return project;
 
     }
@@ -141,6 +143,58 @@ export namespace CueListUtils {
             return cues;
 
         });
+
+    }
+
+}
+
+export namespace TriggerUtils {
+
+    export const createUUID = () => {
+        
+        const parts = uuidv4().split("-");
+        return parts[parts.length - 1];
+
+    }
+
+    export const sortTriggers = (triggers: ReadonlyArray<Trigger>) : Trigger[] => {
+
+        let tArray = [...triggers];
+
+        return tArray.sort((t1, t2) => {
+
+            if(t1.timestamp == t2.timestamp)
+                return 0;
+
+            return (t1.timestamp > t2.timestamp) ? 1 : -1;
+
+        });
+
+    }
+
+    export const createTrigger = (triggers: ReadonlyArray<Trigger> | undefined, timestamp: number, networkCue?: number) : Trigger[] => {
+
+        if(!triggers)
+            triggers = [];
+
+        let uuid: string = "";
+        let isCollision = true;
+
+        while(isCollision) {
+            uuid = createUUID();
+
+            isCollision = false;
+
+            for(let i = 0; i < triggers.length; i++) {
+                if(triggers[i].uuid === uuid) {
+                    isCollision = true;
+                    break;
+                }
+            }
+        }
+
+        const newTrigger : Trigger = { uuid: uuid, timestamp: timestamp, networkCue: networkCue };
+        return sortTriggers([...triggers, newTrigger]);
 
     }
 

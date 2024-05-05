@@ -274,3 +274,15 @@
     background-color: var(--selected-color);
 
 }
+
+#audio-visualizer .controls .timing > .triggers-scroll > ul > li.error-state {
+
+    background-color: var(--error-state-color) !important;
+
+}
+
+#audio-visualizer .controls .timing > .triggers-scroll > ul > li.error-state input {
+
+    background-color: #ff0000 !important;
+
+}

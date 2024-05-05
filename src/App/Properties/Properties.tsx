@@ -5,7 +5,7 @@ import usePropertiesCue from './usePropertiesCue';
 import CueProperties from './CueProperties';
 import { AudioPlayer, AudioPlayerManager } from '../AudioPlayer/Audio';
 import Visualizer from './Visualizer';
-import { Trigger } from '../../Project/Project';
+import { TriggerUtils } from '../../Project/Project';
 import { useGetCueAudioPlayer } from '../Hooks/useGetCueAudioPlayer';
 
 const Properties = () => {
@@ -30,13 +30,7 @@ const Properties = () => {
 
     const addCueTrigger = async (timestamp: number) => {
 
-        let triggers: Trigger[] = [];
-
-        if(cue.triggers)
-            triggers = [ ...cue.triggers ];
-
-        triggers.push({ timestamp });
-
+        const triggers = TriggerUtils.createTrigger(cue.triggers, timestamp);
         setCue({ ...cue, triggers: triggers });
 
     }

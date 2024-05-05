@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import SelectAudioFile from "./SelectAudioFile";
 import { Cue } from "../../Project/Project";
 import { AudioPlayerManager } from "../AudioPlayer/Audio";
@@ -30,16 +30,32 @@ type TriggerListElementProps = {
 
 }
 
+const useGetTriggerListElementState = (trigger: Trigger) : string => {
+
+    return useMemo<string>(() => {
+
+        let state = "";
+
+        if(!trigger.networkCue)
+            state = "error-state";
+
+        return state;
+
+    }, [trigger]);
+
+}
+
 const TriggerListElement = (props: TriggerListElementProps) => {
 
     const formattedDuration = useFormattedTimestamp(props.trigger.timestamp);
+    const state = useGetTriggerListElementState(props.trigger);
 
     return (
-        <li>
+        <li className={state}>
             <p>{formattedDuration}</p>
             <div>
                 <p>EOS Cue #</p>
-                <input type="number" name="Cue Number to Fire" id="" defaultValue={props.trigger.networkCue} />
+                <input type="number" name="Network Cue to Fire" id="network-cue" defaultValue={props.trigger.networkCue} onChange={() => {}} />
             </div>
         </li>
     )
