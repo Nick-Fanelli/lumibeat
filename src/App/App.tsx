@@ -11,8 +11,8 @@ import useAutoSave from "./Hooks/useAutoSave";
 import useCatchAppClose from "./Hooks/useCatchAppClose";
 import { invoke } from "@tauri-apps/api";
 import { useDispatch } from "react-redux";
-import { setProjectName } from "./State/Project/projectNameSlice";
-import { setCueList } from "./State/Project/cueListSlice";
+import { setProjectName } from "./State/Slices/projectNameSlice";
+import { setCueList } from "./State/Slices/cueListSlice";
 import { Project } from "../Project/Project";
 import { AudioPlayer } from "./AudioPlayer/Audio";
 

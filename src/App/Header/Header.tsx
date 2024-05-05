@@ -3,14 +3,14 @@ import './Header.css'
 import HiddenInputComponent from '../HiddenInputComponent/HiddenInputComponent';
 import { FaGear } from 'react-icons/fa6';
 import { useDispatch } from 'react-redux';
-import { addCue } from '../State/Project/cueListSlice';
+import { addCue } from '../State/Slices/cueListSlice';
 import { useSelector } from 'react-redux';
-import { RootState } from '../State/AppStore';
-import { setProjectName } from '../State/Project/projectNameSlice';
+import { AppState } from '../State/AppStore';
+import { setProjectName } from '../State/Slices/projectNameSlice';
 
 const Header = () => {
 
-    const projectName = useSelector((state: RootState) => state.projectName.value);
+    const projectName = useSelector((state: AppState) => state.projectName.value);
 
     const dispatch = useDispatch();
 

@@ -14,10 +14,10 @@ EntryPointGlobalConfigurations.runConfigurations();
 initializeAudioSystem();
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
-  <React.StrictMode>
-    <Provider store={appStore}>
-      <App />
-    </Provider>
-    <section id="bottom-resize-buffer" />
-  </React.StrictMode>,
+    <React.StrictMode>
+        <Provider store={appStore}>
+            <App />
+        </Provider>
+        <section id="bottom-resize-buffer" />
+    </React.StrictMode>,
 );

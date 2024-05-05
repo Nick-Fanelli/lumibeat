@@ -2,17 +2,17 @@ import './CueList.css'
 import CueComponent from './CueComponent';
 import { Tooltip } from 'react-tooltip';
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../State/AppStore';
-import { setSelectedCues } from '../State/App/selectedCuesSlice';
-import { setCueList } from '../State/Project/cueListSlice';
+import { AppState } from '../State/AppStore';
+import { setSelectedCues } from '../State/Slices/selectedCuesSlice';
+import { setCueList } from '../State/Slices/cueListSlice';
 import { CueListUtils, UUID } from '../../Project/Project';
 
 const CueList = () => {
 
     const dispatch = useDispatch();
     
-    const selectedCues = useSelector((state: RootState) => state.selectedCues.value);
-    const cueList = useSelector((state: RootState) => state.cueList.value);
+    const selectedCues = useSelector((state: AppState) => state.selectedCues.value);
+    const cueList = useSelector((state: AppState) => state.cueList.value);
 
     const moveCue = (sourceIndex: number, destinationIndex: number) => {
 

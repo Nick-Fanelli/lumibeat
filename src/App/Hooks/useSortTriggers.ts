@@ -1,13 +1,15 @@
-import { useMemo } from "react";
+import { useEffect, useState } from "react";
 import { Trigger, TriggerUtils } from "../../Project/Project";
 
 export const useSortTriggers = (triggers: Trigger[]) : Trigger[] => {
 
-    const sortedTriggers = useMemo<Trigger[]>(() => {
+    const [sortedTriggers, setSortedTriggers] = useState<Trigger[]>([]);
 
-        return TriggerUtils.sortTriggers(triggers);
+    useEffect(() => {
 
-    }, [ triggers ]);
+        setSortedTriggers(TriggerUtils.sortTriggers(triggers));
+
+    }, [triggers]);
 
     return sortedTriggers;
 

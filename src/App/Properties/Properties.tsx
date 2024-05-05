@@ -1,6 +1,6 @@
 import { useSelector } from 'react-redux';
 import './Properties.css'
-import { RootState } from '../State/AppStore';
+import { AppState } from '../State/AppStore';
 import usePropertiesCue from './usePropertiesCue';
 import CueProperties from './CueProperties';
 import { AudioPlayer, AudioPlayerManager } from '../AudioPlayer/Audio';
@@ -10,7 +10,7 @@ import { useGetCueAudioPlayer } from '../Hooks/useGetCueAudioPlayer';
 
 const Properties = () => {
 
-    const selectedCues = useSelector((state: RootState) => state.selectedCues.value);
+    const selectedCues = useSelector((state: AppState) => state.selectedCues.value);
     const [ cue, setCue ] = usePropertiesCue(selectedCues);
 
     const { audioPlayer, playhead, formattedPlayhead, duration, triggers } = useGetCueAudioPlayer(cue);

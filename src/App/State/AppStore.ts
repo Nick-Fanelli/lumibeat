@@ -1,8 +1,8 @@
 import { configureStore } from "@reduxjs/toolkit";
 
-import selectedCuesSlice from "./App/selectedCuesSlice";
-import cueListSlice from "./Project/cueListSlice";
-import projectNameSlice from "./Project/projectNameSlice";
+import selectedCuesSlice from "./Slices/selectedCuesSlice";
+import cueListSlice from "./Slices/cueListSlice";
+import projectNameSlice from "./Slices/projectNameSlice";
 
 export const appStore = configureStore({
     reducer: {
@@ -14,5 +14,5 @@ export const appStore = configureStore({
     }
 });
 
-export type RootState = ReturnType<typeof appStore.getState>
-export type LauncherDispatch = typeof appStore.dispatch;
+export type AppState = ReturnType<typeof appStore.getState>
+export type AppDispatch = typeof appStore.dispatch;

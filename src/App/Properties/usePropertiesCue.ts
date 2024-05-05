@@ -1,15 +1,15 @@
 import { useCallback, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { RootState } from "../State/AppStore";
+import { AppState } from "../State/AppStore";
 import { useDispatch } from "react-redux";
-import { redefineCue } from "../State/Project/cueListSlice";
+import { redefineCue } from "../State/Slices/cueListSlice";
 import { Cue, CueListUtils, UUID } from "../../Project/Project";
 
 const usePropertiesCue = (selectedCues: UUID[]) : [ Cue | undefined, (cue: Cue) => void ]=> {
 
     const dispatch = useDispatch();
 
-    const cueList = useSelector((state: RootState) => state.cueList.value);
+    const cueList = useSelector((state: AppState) => state.cueList.value);
 
     const [cue, rawSetCue] = useState<Cue | undefined>(undefined);
 

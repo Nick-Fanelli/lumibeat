@@ -4,9 +4,9 @@ import Draggable from "../DragDrop/Draggable";
 import HiddenInputComponent from "../HiddenInputComponent/HiddenInputComponent";
 import CueContextMenu from "../ContextMenu/CueContextMenu";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../State/AppStore";
-import { setCueList } from "../State/Project/cueListSlice";
-import { setSelectedCues } from "../State/App/selectedCuesSlice";
+import { AppState } from "../State/AppStore";
+import { setCueList } from "../State/Slices/cueListSlice";
+import { setSelectedCues } from "../State/Slices/selectedCuesSlice";
 import { Cue, UUID } from "../../Project/Project";
 
 type CueComponentProps = {
@@ -33,8 +33,8 @@ const CueComponent = ({ moveCue, reportOnCueClick, deleteCue, cue, index }: CueC
 
     const dispatch = useDispatch();
     
-    const selectedCues = useSelector((state: RootState) => state.selectedCues.value);
-    const cueList = useSelector((state: RootState) => state.cueList.value);
+    const selectedCues = useSelector((state: AppState) => state.selectedCues.value);
+    const cueList = useSelector((state: AppState) => state.cueList.value);
 
     const [ contextMenu, setContextMenu ] = useState<ContextMenuData>({ isVisible: false, x: 0, y: 0 });
 
