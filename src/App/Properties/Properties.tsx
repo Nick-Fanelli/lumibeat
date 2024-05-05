@@ -5,7 +5,7 @@ import usePropertiesCue from './usePropertiesCue';
 import CueProperties from './CueProperties';
 import { AudioPlayer, AudioPlayerManager } from '../AudioPlayer/Audio';
 import Visualizer from './Visualizer';
-import { TriggerUtils } from '../../Project/Project';
+import { TriggerUtils, UUID } from '../../Project/Project';
 import { useGetCueAudioPlayer } from '../Hooks/useGetCueAudioPlayer';
 
 const Properties = () => {
@@ -35,13 +35,20 @@ const Properties = () => {
 
     }
 
+    const setTriggerNetworkCue = async (triggerUUID: UUID, networkCueNumber: number | undefined) => {
+        
+        const triggers = TriggerUtils.setTriggerNetworkCue(cue.triggers, triggerUUID, networkCueNumber);
+        setCue({ ...cue, triggers: triggers });
+
+    }
+
     return (
 
         <section id="audio-visualizer">
 
             {
                 <>
-                    <CueProperties cue={cue} setCueAudioFile={setCueAudioFile} addCueTrigger={addCueTrigger} triggers={triggers} formattedPlayhead={formattedPlayhead} />
+                    <CueProperties cue={cue} setCueAudioFile={setCueAudioFile} addCueTrigger={addCueTrigger} triggers={triggers} formattedPlayhead={formattedPlayhead} setTriggerNetworkCue={setTriggerNetworkCue} />
                 </>
             }
 

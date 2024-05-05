@@ -198,4 +198,27 @@ export namespace TriggerUtils {
 
     }
 
+    export const setTriggerNetworkCue = (triggers: ReadonlyArray<Trigger> | undefined, triggerUUID: UUID, networkCueNumber: number | undefined) : Trigger[] | undefined => {
+
+        if(!triggers) {
+            console.error("Can not set trigger network cue on cue without triggers");
+            return triggers;
+        }
+
+        const triggerIndex = triggers.findIndex(trigger => trigger.uuid === triggerUUID);
+
+        if(triggerIndex == -1) {
+            console.error("Can not modify network cue number on trigger that doesn't exist!");
+            return [...triggers];
+        }
+
+        let modifiedTriggers = [...triggers];
+        
+        const currentTrigger = triggers[triggerIndex];
+        modifiedTriggers[triggerIndex] = { ...currentTrigger, networkCue: networkCueNumber };
+
+        return modifiedTriggers;
+
+    }
+
 }
