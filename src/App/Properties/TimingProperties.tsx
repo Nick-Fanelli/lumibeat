@@ -86,7 +86,7 @@ const TimingProperties = (props: Props) => {
             <div className="triggers-scroll">
                 <ul id="triggers-list">
                     {
-                        props.triggers.map((trigger, index) => (
+                        props.triggers.map((trigger) => (
                             <TriggerListElement key={trigger.uuid} trigger={trigger} setTriggerNetworkCue={props.setTriggerNetworkCue} />
                         ))
                     }

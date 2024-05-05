@@ -172,7 +172,7 @@ export namespace TriggerUtils {
 
     }
 
-    export const createTrigger = (triggers: ReadonlyArray<Trigger> | undefined, timestamp: number, networkCue?: number) : Trigger[] => {
+    export const createTrigger = (triggers: ReadonlyArray<Trigger> | undefined, timestamp: number) : Trigger[] => {
 
         if(!triggers)
             triggers = [];
@@ -180,6 +180,7 @@ export namespace TriggerUtils {
         let uuid: string = "";
         let isCollision = true;
 
+        // Get UUID
         while(isCollision) {
             uuid = createUUID();
 
@@ -193,8 +194,57 @@ export namespace TriggerUtils {
             }
         }
 
+        // Auto-Calculate Network Cue Number
+        let sortedTriggers = sortTriggers(triggers);
+        let networkCue = undefined;
+
+        if(sortedTriggers.length > 0) {
+
+            let previousIndex = -1;
+
+            for(let i = 0; i < sortedTriggers.length; i++) {
+                if(sortedTriggers[i].timestamp < timestamp) {
+                    previousIndex = i;
+                }
+            }
+
+
+            if(previousIndex != -1) {
+
+                const pT = sortedTriggers[previousIndex];
+
+                if(previousIndex + 1 <= sortedTriggers.length - 1) { // Is between two cues
+
+                    if(pT.networkCue) {
+
+                        if(pT.networkCue % 1 == 0) {
+                            networkCue = pT.networkCue + 0.5;
+                        } else {
+                            networkCue = pT.networkCue + 0.1;
+                        }
+
+                    }
+
+                } else { // Is last cue 
+
+                    if(pT.networkCue) {
+
+                        if(pT.networkCue % 1 == 0) {
+                            networkCue = pT.networkCue + 1;
+                        } else {
+                            networkCue = pT.networkCue + 0.1;
+                        }
+
+                    }
+
+                }
+
+            }
+
+        }
+
         const newTrigger : Trigger = { uuid: uuid, timestamp: timestamp, networkCue: networkCue };
-        return sortTriggers([...triggers, newTrigger]);
+        return sortTriggers([...sortedTriggers, newTrigger]);
 
     }
 
