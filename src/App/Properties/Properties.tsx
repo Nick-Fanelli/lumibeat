@@ -44,13 +44,20 @@ const Properties = () => {
 
     }
 
+    const deleteTrigger = async (triggerUUID: UUID) => {
+
+        const triggers = TriggerUtils.deleteTrigger(cue.triggers, triggerUUID);
+        setCue({ ...cue, triggers: triggers });
+
+    }
+
     return (
 
         <section id="audio-visualizer">
 
             {
                 <>
-                    <CueProperties cue={cue} setCueAudioFile={setCueAudioFile} addCueTrigger={addCueTrigger} triggers={triggers} formattedPlayhead={formattedPlayhead} setTriggerNetworkCue={setTriggerNetworkCue} selectedTrigger={selectedTrigger} setSelectedTrigger={setSelectedTrigger} />
+                    <CueProperties cue={cue} setCueAudioFile={setCueAudioFile} addCueTrigger={addCueTrigger} triggers={triggers} formattedPlayhead={formattedPlayhead} setTriggerNetworkCue={setTriggerNetworkCue} selectedTrigger={selectedTrigger} setSelectedTrigger={setSelectedTrigger} deleteTrigger={deleteTrigger} />
                 </>
             }
 

@@ -71,6 +71,7 @@ type Props = {
     addCueTrigger: (timestamp: number) => void
     setTriggerNetworkCue: (triggerUUID: UUID, networkCueNumber: number | undefined) => void
     setSelectedTrigger: (trigger: UUID | undefined) => void
+    deleteTrigger: (triggerUUID: UUID) => void
 
 }
 
@@ -90,7 +91,10 @@ const TimingProperties = (props: Props) => {
 
                 <p>{props.formattedPlayhead}</p>
 
-                <button>Delete Trigger</button>
+                <button onClick={() => {
+                    if(props.selectedTrigger !== undefined)
+                        props.deleteTrigger(props.selectedTrigger);
+                }}>Delete Trigger</button>
             </div>
 
             <div className="triggers-scroll">

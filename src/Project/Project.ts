@@ -271,4 +271,25 @@ export namespace TriggerUtils {
 
     }
 
+    export const deleteTrigger = (triggers: ReadonlyArray<Trigger> | undefined, triggerUUID: UUID) => {
+
+        if(!triggers) {
+            console.error("Can not delete trigger from empty array!");
+            return;
+        }
+
+        const triggerIndex = triggers.findIndex(trigger => trigger.uuid === triggerUUID);
+
+        if(triggerIndex == -1) {
+            console.error("Can not modify network cue number on trigger that doesn't exist!");
+            return [...triggers];
+        }
+
+        let modifiedTriggers = [...triggers];
+        modifiedTriggers.splice(triggerIndex, 1);
+
+        return modifiedTriggers;
+
+    }
+
 }
