@@ -2,6 +2,28 @@ import { useMemo } from "react";
 import { Cue, Trigger, UUID } from "../../Project/Project";
 import { AudioPlayerManager } from "../AudioPlayer/Audio";
 import { useFormattedTimestamp } from "../Hooks/useFormattedDuration";
+import HiddenInputComponent from "../HiddenInputComponent/HiddenInputComponent";
+
+const convertFormattedToTimecode = (formatted: string) => {
+
+    const parts = formatted.split(":");
+
+    if(parts.length != 2) {
+        console.error("Can not convert parts of length != 2");
+        return;
+    }
+
+    const minutes = parts[0];
+
+    let [seconds, milliseconds] = parts[1].split(".");
+
+    while(milliseconds.length < 3) {
+        milliseconds += "0";
+    }
+
+    return (+minutes * 60) + +seconds + (+milliseconds / 1000);
+
+}
 
 type TriggerListElementProps = {
 
@@ -10,6 +32,7 @@ type TriggerListElementProps = {
 
     setTriggerNetworkCue: (triggerUUID: UUID, networkCueNumber: number | undefined) => void
     setSelectedTrigger: (trigger: UUID | undefined) => void
+    setTriggerTimestamp: (triggerUUID: UUID, timestamp: number) => void
 
 }
 
@@ -38,7 +61,48 @@ const TriggerListElement = (props: TriggerListElementProps) => {
         <li className={state} onClick={() => {
             props.setSelectedTrigger(props.trigger.uuid)
         }}>
-            <p>{formattedDuration}</p>
+            <HiddenInputComponent value={formattedDuration} customValidation={(value: string) => {
+
+                let isValid = true;
+
+                let parts = value.split(":");
+
+                if(parts.length != 2)
+                    return false;
+
+                let secondParts = parts[1].split(".");
+
+                parts.splice(1, 1);
+                parts.push(secondParts[0], secondParts[1]);
+
+                for(let i = 0; i < parts.length; i++) {
+                    const part = parts[i];
+
+                    if(!Number.isInteger(+part)) {
+                        isValid = false;
+                        break;
+                    } else {
+                        const partNum: number = +part;
+
+                        const max = i == 2 ? 999 : 59;
+
+                        if(partNum > max || partNum < 0) {
+                            isValid = false;
+                            break;
+                        }
+                    }
+
+                }
+
+                return isValid;
+
+            }} setValue={(value: string) => {
+                const timestamp = convertFormattedToTimecode(value);
+
+                if(timestamp)
+                    props.setTriggerTimestamp(props.trigger.uuid, timestamp);
+
+            }} />
             <div>
                 <p>EOS Cue #</p>
                 <input type="number" name="Network Cue to Fire" id="network-cue" defaultValue={props.trigger.networkCue} onChange={(e) => {
@@ -72,6 +136,7 @@ type Props = {
     setTriggerNetworkCue: (triggerUUID: UUID, networkCueNumber: number | undefined) => void
     setSelectedTrigger: (trigger: UUID | undefined) => void
     deleteTrigger: (triggerUUID: UUID) => void
+    setTriggerTimestamp: (triggerUUID: UUID, timestamp: number) => void
 
 }
 
@@ -101,7 +166,7 @@ const TimingProperties = (props: Props) => {
                 <ul id="triggers-list">
                     {
                         props.triggers.map((trigger) => (
-                            <TriggerListElement key={trigger.uuid} trigger={trigger} setTriggerNetworkCue={props.setTriggerNetworkCue} selectedTrigger={props.selectedTrigger} setSelectedTrigger={props.setSelectedTrigger} />
+                            <TriggerListElement key={trigger.uuid} trigger={trigger} setTriggerNetworkCue={props.setTriggerNetworkCue} selectedTrigger={props.selectedTrigger} setSelectedTrigger={props.setSelectedTrigger} setTriggerTimestamp={props.setTriggerTimestamp} />
                         ))
                     }
                 </ul>

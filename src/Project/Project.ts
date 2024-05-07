@@ -271,6 +271,28 @@ export namespace TriggerUtils {
 
     }
 
+    export const setTriggerTimestamp = (triggers: ReadonlyArray<Trigger> | undefined, triggerUUID: UUID, timestamp: number) => {
+        
+        if(!triggers) {
+            console.error("Can not set trigger network cue on cue without triggers");
+            return triggers;
+        }
+
+        const triggerIndex = triggers.findIndex(trigger => trigger.uuid === triggerUUID);
+
+        if(triggerIndex == -1) {
+            console.error("Can not modify network cue number on trigger that doesn't exist!");
+            return [...triggers];
+        }
+
+        let modifiedTriggers = [...triggers];
+        const currentTrigger = triggers[triggerIndex];
+        modifiedTriggers[triggerIndex] = { ...currentTrigger, timestamp: timestamp };
+
+        return modifiedTriggers;
+
+    }
+
     export const deleteTrigger = (triggers: ReadonlyArray<Trigger> | undefined, triggerUUID: UUID) => {
 
         if(!triggers) {

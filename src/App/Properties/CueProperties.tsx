@@ -14,6 +14,7 @@ type Props = {
     setTriggerNetworkCue: (triggerUUID: UUID, networkCueNumber: number | undefined) => void
     addCueTrigger: (timestamp: number) => void
     setSelectedTrigger: (trigger: UUID | undefined) => void
+    setTriggerTimestamp: (triggerUUID: UUID, timestamp: number) => void
     deleteTrigger: (triggerUUID: UUID) => void
 
     formattedPlayhead: string
@@ -63,7 +64,7 @@ const CueProperties = (props: Props) => {
                 </div>
 
                 <div className={`timing ${activeVisualizerTab != ActiveVisualizerTab.TIMING ? 'hidden' : ''}`}>
-                    <TimingProperties cue={props.cue} triggers={triggers} formattedPlayhead={props.formattedPlayhead} addCueTrigger={props.addCueTrigger} setTriggerNetworkCue={props.setTriggerNetworkCue} selectedTrigger={props.selectedTrigger} setSelectedTrigger={props.setSelectedTrigger} deleteTrigger={props.deleteTrigger} />
+                    <TimingProperties cue={props.cue} triggers={triggers} formattedPlayhead={props.formattedPlayhead} addCueTrigger={props.addCueTrigger} setTriggerNetworkCue={props.setTriggerNetworkCue} selectedTrigger={props.selectedTrigger} setSelectedTrigger={props.setSelectedTrigger} deleteTrigger={props.deleteTrigger} setTriggerTimestamp={props.setTriggerTimestamp} />
                 </div>
 
             </div>

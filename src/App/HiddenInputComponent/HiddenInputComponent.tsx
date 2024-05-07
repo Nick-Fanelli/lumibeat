@@ -9,6 +9,8 @@ interface HandleInputComponentProps {
     value: any
     setValue?: (value: string) => void
 
+    customValidation?: (value: string) => boolean
+
     shouldLiveUpdate?: boolean
 
     className?: string
@@ -50,7 +52,12 @@ const HiddenInputComponent = (props: HandleInputComponentProps) => {
         <input ref={ref} className={`hidden-input ${props.className}`} type={props.type || "text"} defaultValue={props.value} 
         
         onChange={(e: ChangeEvent<HTMLInputElement>) => {
+
             if(props.shouldLiveUpdate) {
+                if(props.customValidation && !props.customValidation(e.currentTarget.value)) { // Invalid
+                    return;
+                }
+
                 props.setValue ? props.setValue(e.currentTarget.value) : console.warn("props.setValue should be defined");
             }
             else
@@ -72,10 +79,15 @@ const HiddenInputComponent = (props: HandleInputComponentProps) => {
             document.addEventListener('mousedown', globalMouseDown);
         }}
         
-        onBlur={() => {
+        onBlur={(e) => {
 
             if(!props.shouldLiveUpdate && changedValue.current !== null) {
-                props.setValue ? props.setValue(changedValue.current) : console.warn("props non-live update didn't work");
+                if(!props.customValidation || props.customValidation(changedValue.current))
+                    props.setValue ? props.setValue(changedValue.current) : console.warn("props non-live update didn't work");
+                else {
+                    e.currentTarget.value = props.value;
+                    changedValue.current = null;
+                }
             }
 
             document.removeEventListener("keydown", watchKeyInputForFocus);
