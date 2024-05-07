@@ -7,8 +7,11 @@ import { AudioPlayer, AudioPlayerManager } from '../AudioPlayer/Audio';
 import Visualizer from './Visualizer';
 import { TriggerUtils, UUID } from '../../Project/Project';
 import { useGetCueAudioPlayer } from '../Hooks/useGetCueAudioPlayer';
+import { useState } from 'react';
 
 const Properties = () => {
+
+    const [ selectedTrigger, setSelectedTrigger ] = useState<UUID | undefined>(undefined);
 
     const selectedCues = useSelector((state: AppState) => state.selectedCues.value);
     const [ cue, setCue ] = usePropertiesCue(selectedCues);
@@ -17,7 +20,6 @@ const Properties = () => {
     
     if(cue == undefined)
         return null;
-
 
     const setCueAudioFile = async (audioFilepath: string) => {
 
@@ -48,11 +50,11 @@ const Properties = () => {
 
             {
                 <>
-                    <CueProperties cue={cue} setCueAudioFile={setCueAudioFile} addCueTrigger={addCueTrigger} triggers={triggers} formattedPlayhead={formattedPlayhead} setTriggerNetworkCue={setTriggerNetworkCue} />
+                    <CueProperties cue={cue} setCueAudioFile={setCueAudioFile} addCueTrigger={addCueTrigger} triggers={triggers} formattedPlayhead={formattedPlayhead} setTriggerNetworkCue={setTriggerNetworkCue} selectedTrigger={selectedTrigger} setSelectedTrigger={setSelectedTrigger} />
                 </>
             }
 
-            <Visualizer cue={cue} audioPlayer={audioPlayer} duration={duration} triggers={triggers} playhead={playhead} />
+            <Visualizer cue={cue} audioPlayer={audioPlayer} duration={duration} triggers={triggers} playhead={playhead} selectedTrigger={selectedTrigger} />
 
         </section>
 

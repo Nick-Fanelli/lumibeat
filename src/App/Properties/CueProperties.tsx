@@ -8,9 +8,14 @@ import TimingProperties from "./TimingProperties";
 type Props = {
 
     cue: Cue
+    selectedTrigger: UUID | undefined
+
     setCueAudioFile: (audioFile: string) => void
     setTriggerNetworkCue: (triggerUUID: UUID, networkCueNumber: number | undefined) => void
     addCueTrigger: (timestamp: number) => void
+    setSelectedTrigger: (trigger: UUID | undefined) => void
+
+
     formattedPlayhead: string
 
     triggers: Trigger[]
@@ -58,7 +63,7 @@ const CueProperties = (props: Props) => {
                 </div>
 
                 <div className={`timing ${activeVisualizerTab != ActiveVisualizerTab.TIMING ? 'hidden' : ''}`}>
-                    <TimingProperties cue={props.cue} triggers={triggers} formattedPlayhead={props.formattedPlayhead} addCueTrigger={props.addCueTrigger} setTriggerNetworkCue={props.setTriggerNetworkCue} />
+                    <TimingProperties cue={props.cue} triggers={triggers} formattedPlayhead={props.formattedPlayhead} addCueTrigger={props.addCueTrigger} setTriggerNetworkCue={props.setTriggerNetworkCue} selectedTrigger={props.selectedTrigger} setSelectedTrigger={props.setSelectedTrigger} />
                 </div>
 
             </div>

@@ -103,12 +103,19 @@
 
     height: 100%;
     width: 4px;
-    background-color: blue;
+    background-color: #1167e9;
     opacity: 80%;
 
     pointer-events: none;
 
 }
+
+#audio-visualizer > #visualizer > .waveform > .trigger.selected {
+
+    background-color: #f8b10c !important;
+
+}
+
 
 #audio-visualizer > #visualizer > .waveform > .midline {
 

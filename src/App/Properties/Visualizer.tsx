@@ -1,14 +1,16 @@
 import { useCallback, useEffect, useRef } from "react";
-import { Cue } from "../../Project/Project";
+import { Cue, UUID } from "../../Project/Project";
 import { AudioPlayer } from "../AudioPlayer/Audio";
 import { Trigger } from "../../Project/Project";
 
 type VisualizerProps = {
 
-    cue: Cue,
+    cue: Cue
+    selectedTrigger: UUID | undefined
+
     audioPlayer: AudioPlayer | undefined
     duration: number
-    triggers: Trigger[],
+    triggers: Trigger[]
     playhead: number
 
 }
@@ -90,7 +92,7 @@ const Visualizer = (props: VisualizerProps) => {
                 
                     {
                         props.triggers.map((trigger, index) => (
-                            <div key={index} className='trigger' style={{
+                            <div key={index} className={`trigger ${props.selectedTrigger === trigger.uuid ? "selected" : ""}`} style={{
                                 left: `${(trigger.timestamp / props.duration) * 100}%`
                             }}></div>
                         ))
