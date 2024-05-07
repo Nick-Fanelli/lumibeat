@@ -117,7 +117,10 @@ const TimingProperties = (props: Props) => {
 
                 }}>Add Trigger</button>
 
-                <p>{props.formattedPlayhead}</p>
+                <p onDoubleClick={() => {
+                    if(props.selectedTrigger)
+                        props.setTriggerTimestamp(props.selectedTrigger, convertFormattedToTimecode(props.formattedPlayhead));
+                }} style={{ cursor: "pointer" }}>{props.formattedPlayhead}</p>
 
                 <button onClick={() => {
                     if(props.selectedTrigger !== undefined)
